@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
+{% load gravatar %}
 
 {% block content %}
-The future home of profiles.
+
+<h3>Profile Details</h4>
+<div>{% gravatar user.email 150 %}</div>
+<form method="post">
+  {% csrf_token %}
+  {{form.as_p}}
+  {{profile_form.as_p}}
+  <input type="submit" class="btn btn-primary" value="Save">
+</form>
 {% endblock content %}
