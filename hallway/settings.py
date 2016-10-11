@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'webpack_loader',
     'debug_toolbar',
+    'crispy_forms',
     'accounts',
     'api',
     'conversations',
@@ -64,6 +65,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'hallway.urls'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 TEMPLATES = [
     {

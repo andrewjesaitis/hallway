@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load gravatar %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -7,7 +8,9 @@
 <div>{% gravatar user.email 150 %}</div>
 <form method="post">
   {% csrf_token %}
-  {{form.as_p}}
+  {% crispy form form.helper %}
+  {% crispy profile_form profile_form.helper %}
+
   {{profile_form.as_p}}
   <input type="submit" class="btn btn-primary" value="Save">
 </form>
