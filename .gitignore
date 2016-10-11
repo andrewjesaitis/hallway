@@ -87,3 +87,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# autogen files
+.tern-port
+db.sqlite3
+assets/bundles/
+node_modules/
+webpack-stats.json
