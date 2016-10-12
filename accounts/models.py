@@ -5,6 +5,6 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    twitter_url = models.URLField(blank=True)
-    google_plus_url = models.URLField(blank=True)
-    facebook_url = models.URLField(blank=True)
+    twitter_url = models.URLField(null=True, blank=True)
+    google_plus_url = models.URLField(null=True, blank=True)
+    facebook_url = models.URLField(null=True, blank=True)
