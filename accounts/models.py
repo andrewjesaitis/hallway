@@ -8,3 +8,6 @@ class Profile(models.Model):
     twitter_url = models.URLField(null=True, blank=True)
     google_plus_url = models.URLField(null=True, blank=True)
     facebook_url = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return "{}'s Profile".format(self.user.username)
