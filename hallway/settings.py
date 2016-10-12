@@ -129,6 +129,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+#REST
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
