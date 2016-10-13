@@ -4,6 +4,7 @@
   "description": "A virtual hallway for online classrooms",
   "main": "index.js",
   "scripts": {
+    "hot-reload": "node server.js",
     "watch": "webpack -d --watch",
     "development": "webpack -d",
     "production": "NODE_ENV=production webpack -p"
