@@ -11,15 +11,20 @@ module.exports = {
   context: __dirname,
 
   entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
     path.resolve(PATHS.app, 'index.jsx'),
   ],
 
   output: {
     path: PATHS.dist,
     filename: '[name]-[hash].js',
+    publicPath: 'http://localhost:3000/assets/bundles/',
   },
 
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
     new BundleTracker({
       filename: './webpack-stats.json',
     }),
@@ -29,7 +34,7 @@ module.exports = {
     loaders: [
       { test: /\.(jsx|js)$/,
         include: PATHS.app,
-        loaders: ['babel-loader'] },
+        loaders: ['react-hot', 'babel-loader'] },
     ],
   },
 
