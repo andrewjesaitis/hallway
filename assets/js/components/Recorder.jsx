@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
 
 function Recorder({ showModal, isRecording, hasRecording, onRecord,
                     src, onClose, onPost, autoPlay, muted,
-                    controls, loop, width, height }) {
+                    controls, loop, width, height, isSubjectValid,
+                    onSubjectChange, subject }) {
   return (
     <Modal show={showModal}>
       <Modal.Header>
@@ -14,24 +15,38 @@ function Recorder({ showModal, isRecording, hasRecording, onRecord,
       <Modal.Body>
         <div className="row">
           <div className="col-sm-12 text-center">
-            <video 
+            <video
               autoPlay={autoPlay}
               muted={muted}
               controls={controls}
               loop={loop}
               width={width}
               height={height}
-              src={src} 
+              src={src}
             />
           </div>
         </div>
+        <FormGroup
+          controlId="videoSubject"
+          validationState={isSubjectValid()}
+        >
+          <ControlLabel>Subject</ControlLabel>
+          <FormControl
+            type="text"
+            value={subject}
+            placeholder="What are you talking about?"
+            onChange={onSubjectChange}
+          />
+          <FormControl.Feedback />
+          <HelpBlock>Subjects need to be less than 120 characters</HelpBlock>
+        </FormGroup>
       </Modal.Body>
       <Modal.Footer>
         <Button className="btn-primary" disabled={!hasRecording} onClick={onPost}>
           Post
         </Button>
         <Button className="btn-danger" active={isRecording} onClick={onRecord}>
-          { isRecording ? "Stop" : "Record" }
+          {isRecording ? 'Stop' : 'Record'}
         </Button>
       </Modal.Footer>
     </Modal>
@@ -52,6 +67,16 @@ Recorder.propTypes = {
   loop: PropTypes.bool.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  onSubjectChange: PropTypes.func.isRequired,
+  subject: PropTypes.string,
+  isSubjectValid: PropTypes.func.isRequired,
 };
 
 export default Recorder;
+
+
+
+
+
+
+

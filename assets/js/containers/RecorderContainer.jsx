@@ -8,6 +8,7 @@ class RecorderContainer extends Component {
     this.state = {
       s3Url: '',
       src: '',
+      subject: '',
       showModal: true,
       isRecording: false,
       hasRecording: false,
@@ -22,6 +23,14 @@ class RecorderContainer extends Component {
   }
   componentDidMount() {
     this.requestUserMedia();
+  }
+  isSubjectValid() {
+    const length = this.state.subject.length;
+    if (length < 120) return 'success';
+    return 'error';
+  }
+  handleSubjectChange(e) {
+    this.setState({ subject: e.target.value });
   }
   requestUserMedia() {
     this.captureUserMedia((stream) => {
@@ -90,7 +99,9 @@ class RecorderContainer extends Component {
         loop={this.state.loop}
         width={this.state.width}
         height={this.state.height}
-
+        isSubjectValid={() => this.isSubjectValid()}
+        onSubjectChange={(e) => this.handleSubjectChange(e)}
+        subject={this.state.subject}
       />
     );
   }
