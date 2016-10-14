@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import RecordRTC from 'recordrtc';
 import Recorder from '../components/Recorder';
 
+import { uploadVideo } from '../utils/api';
+
 class RecorderContainer extends Component {
   constructor() {
     super();
@@ -76,7 +78,9 @@ class RecorderContainer extends Component {
     });
   }
   handlePost() {
-    console.log("Uploading...");
+    console.log('Uploading...');
+    console.log(this.state.recordVideo);
+    uploadVideo(this.state.recordVideo.blob, this.state.subject);
   }
   handleClose() {
     this.setState({
@@ -88,7 +92,7 @@ class RecorderContainer extends Component {
       <Recorder
         showModal={this.state.showModal}
         isRecording={this.state.isRecording}
-        hasRecording={this.hasRecording}
+        hasRecording={this.state.hasRecording}
         onRecord={() => this.handleRecord()}
         onPost={() => this.handlePost()}
         src={this.state.src}

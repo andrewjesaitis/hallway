@@ -1,61 +1,73 @@
-function getSignedRequest(file){
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/api/sign_s3?file_name="+file.name+"&file_type="+encodeURIComponent(file.type));
-  xhr.onreadystatechange = function(){
-    if(xhr.readyState === 4){
-      if(xhr.status === 200){
-        var response = JSON.parse(xhr.responseText);
-        console.log(response);
-        uploadFile(file, response.data, response.url);
-      }
-      else{
-        alert("Could not get signed URL.");
-      }
-    }
-  };
-  xhr.send();
-}
-function uploadFile(file, s3Data, url){
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", s3Data.url);
+import axios from 'axios';
+import _ from 'lodash';
+import * as Cookies from 'js-cookie';
 
-  var postData = new FormData();
-  for(key in s3Data.fields){
-    postData.append(key, s3Data.fields[key]);
-  }
-  postData.append('file', file.data);
 
-  xhr.onreadystatechange = function() {
-    if(xhr.readyState === 4){
-      if(xhr.status === 200 || xhr.status === 204){
-          console.log("uploaded: " + url);
-          updateDb(url);
-      }
-      else{
-        alert("Could not upload file.");
-      }
-   }
-  };
-  xhr.send(postData);
+function getSignedRequest(blob) {
+  return axios.get(
+    '/api/v1/sign_s3', { params: {
+      file_name: Math.floor(Math.random() * 90000) + 10000,
+      file_type: blob.type,
+    } }).then((res) => {
+      console.log('Obtained S3 Key');
+      console.log(res);
+      return res;
+    }).catch((err) => {
+      console.warn('Could not get S3 Key');
+      console.log(err);
+    });
 }
 
-function updateDb(url){
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", '/messages/videos');
-  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+function uploadFile(blob, { data, url }) {
 
-  var postData = JSON.stringify({'s3_url': url});
 
-  xhr.onreadystatechange = function() {
-    if(xhr.readyState === 4){
-      if(xhr.status === 200 || xhr.status === 201){
-          console.log("s3_url added: " + url);
-          alert("Success!");
-      }
-      else{
-        alert("Could not updatn db.");
-      }
-   }
+  console.log('In upload file');
+  const postData = new FormData();
+  _.forIn(data.fields, (v, k) => {
+    postData.append(k, v);
+  });
+  postData.append('file', blob);
+  return axios.post(
+    data.url, postData).then((res) => {
+      console.log('Video uploaded');
+      console.log(res);
+      res.s3Url = url;
+      return res;
+    }).catch((err) => {
+      console.warn('Could not upload file');
+      console.log(err);
+    });
+}
+
+function updateDb(subject, { s3Url }) {
+  const dbPostData = {
+    subject,
+    url: s3Url,
+    conversation: null,
   };
-  xhr.send(postData);
+  const config = {
+    headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+  };
+  console.log(dbPostData);
+  return axios.post(
+    '/api/v1/messages/',
+    dbPostData,
+    config)
+   .then((res) => {
+    console.log('Db Updated');
+    console.log(res);
+    return res;
+  }).catch((err) => {
+    console.warn('Could not update database');
+    console.log(err);
+  });
+}
+
+export function uploadVideo(blob, subject) {
+  return getSignedRequest(blob)
+         .then((res) => uploadFile(blob, res.data))
+         .then((res) => updateDb(subject, res))
+         .catch(() => {
+           console.warn('Error during upload');
+         });
 }

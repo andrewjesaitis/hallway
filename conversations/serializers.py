@@ -11,6 +11,10 @@ class ConversationSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     pk = serializers.IntegerField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(
+        read_only=True,
+        default=serializers.CurrentUserDefault()
+    )
     conversation = serializers.PrimaryKeyRelatedField(
         queryset=Conversation.objects.all(), allow_null=True, required=False)
     class Meta:

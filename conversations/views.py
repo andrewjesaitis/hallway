@@ -19,4 +19,4 @@ class ConversationViewSet(mixins.RetrieveModelMixin,
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes =[AllowAny]
+    permission_classes = [AllowAny]
