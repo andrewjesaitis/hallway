@@ -14,9 +14,9 @@ class ConversationViewSet(mixins.RetrieveModelMixin,
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     filter_fields = ('subject',)
-    permission_classes = [AllowAny]
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [AllowAny]
+    filter_fields = ('conversation',)

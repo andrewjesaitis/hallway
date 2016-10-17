@@ -67,3 +67,36 @@ export function uploadVideo(blob, subject) {
            console.warn('Error during upload');
          });
 }
+
+export function getConversations() {
+  const config = {
+    headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+  };
+  return axios.get(
+    '/api/v1/conversations/',
+    config
+  ).then((res) => {
+    console.log('Conversations Retrieved');
+    console.log(res);
+    return res;
+  }).catch((err) => {
+    console.warn('Could not retrieve Conversations');
+    console.log(err);
+  });
+}
+
+export function getMessages(conversationId) {
+  const config = {
+    headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+  };
+  return axios.get(
+    `/api/v1/messages/?conversation=${conversationId}`,
+    config
+  ).then((res) => {
+    console.log(`Messages retrieved for conversation ${conversationId}`);
+    return res;
+  }).catch((err) => {
+    console.warn(`Couldn't fetch messages for conversation ${conversationId}`);
+    console.log(err);
+  });
+}

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RecorderContainer from './containers/RecorderContainer';
+import ConversationListContainer from './containers/ConversationListContainer';
 
 ReactDOM.render(
-  <RecorderContainer />,
+  <ConversationListContainer />,
   document.getElementById('react-app')
 );
