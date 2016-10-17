@@ -2,7 +2,6 @@ import axios from 'axios';
 import _ from 'lodash';
 import * as Cookies from 'js-cookie';
 
-
 function getSignedRequest(blob) {
   return axios.get(
     '/api/v1/sign_s3', { params: {
@@ -18,20 +17,17 @@ function getSignedRequest(blob) {
     });
 }
 
-function uploadFile(blob, { data, url }) {
-
-
-  console.log('In upload file');
+function uploadFile(blob, { awsInfo, s3Url }) {
   const postData = new FormData();
-  _.forIn(data.fields, (v, k) => {
+  _.forIn(awsInfo.fields, (v, k) => {
     postData.append(k, v);
   });
   postData.append('file', blob);
   return axios.post(
-    data.url, postData).then((res) => {
+    awsInfo.url, postData).then((res) => {
       console.log('Video uploaded');
       console.log(res);
-      res.s3Url = url;
+      res.s3Url = s3Url;
       return res;
     }).catch((err) => {
       console.warn('Could not upload file');
@@ -65,7 +61,7 @@ function updateDb(subject, { s3Url }) {
 
 export function uploadVideo(blob, subject) {
   return getSignedRequest(blob)
-         .then((res) => uploadFile(blob, res.data))
+         .then((res) => uploadFile(blob, res.data)) // res = {data:{awsInfo, s3Url}, status, ...}
          .then((res) => updateDb(subject, res))
          .catch(() => {
            console.warn('Error during upload');

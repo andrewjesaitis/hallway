@@ -24,8 +24,8 @@ def sign_s3(request):
         ExpiresIn = 3600
     )
     res = { 
-        'data': presigned_post,
-        'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name)
+        'awsInfo': presigned_post,
+        's3Url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name)
     }
 
     return JsonResponse(res)
