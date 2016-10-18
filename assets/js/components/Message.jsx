@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
 
-function Message({ s3Url }) {
+function Message({ handleClick, s3Url }) {
   return (
-    <li>{s3Url}</li>
+    <li><a onClick={handleClick}>{s3Url}</a></li>
   );
 }
 
 Message.propTypes = {
   s3Url: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired,
 };
 
 export default Message;

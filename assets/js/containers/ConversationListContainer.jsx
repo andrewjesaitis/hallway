@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+
 import ConversationList from '../components/ConversationList';
+import PlayerContainer from '../containers/PlayerContainer';
 import { getConversations } from '../utils/api.js';
 
 class ConversationListContainer extends Component {
@@ -19,7 +21,10 @@ class ConversationListContainer extends Component {
   }
   render() {
     return (
-      <ConversationList conversations={this.state.conversations} />
+      <div>
+        <ConversationList conversations={this.state.conversations} />
+        <PlayerContainer />
+      </div>
     );
   }
 }
