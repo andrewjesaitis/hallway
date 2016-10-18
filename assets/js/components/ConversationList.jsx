@@ -13,13 +13,17 @@ function ConversationList({ conversations }) {
     );
   }
   return (
-    <ul>
-      {
-        conversations.map((conversation, idx) =>
-          <ConversationContainer conversation={conversation} idx={idx} key={conversation.pk} />
-        )
-       }
-    </ul>
+    <div className="row">
+      <div className="col-sm-12">
+        <ul>
+          {
+            conversations.map((conversation, idx) =>
+              <ConversationContainer conversation={conversation} idx={idx} key={conversation.pk} />
+            )
+           }
+        </ul>
+      </div>
+    </div>
   );
 }
 

@@ -1,9 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ConversationListContainer from './containers/ConversationListContainer';
-import PlayerContainer from './containers/PlayerContainer';
+import ActionButtonContainer from './containers/ActionButtonContainer';
 
 ReactDOM.render(
-  <PlayerContainer />,
+  <ConversationListContainer />,
   document.getElementById('react-app')
+);
+
+ReactDOM.render(
+  <ActionButtonContainer />,
+  document.getElementById('react-action-button')
 );
