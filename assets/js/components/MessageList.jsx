@@ -7,7 +7,7 @@ function MessageList({ messages }) {
     <ul>
       {
         messages.map((message, idx) =>
-          <MessageContainer message={message} idx={idx} key={message.id} />
+          <MessageContainer message={message} idx={idx} key={message.pk} />
         )
        }
     </ul>

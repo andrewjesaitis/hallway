@@ -1,17 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import RecordRTC from 'recordrtc';
-import Recorder from '../components/Recorder';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
+import { displayRecorder } from '../redux/ui';
+import Recorder from '../components/Recorder';
 import { uploadVideo } from '../utils/api';
 
 class RecorderContainer extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       s3Url: '',
       src: '',
       subject: '',
-      showModal: true,
       isRecording: false,
       hasRecording: false,
       recordVideo: null,
@@ -83,14 +85,12 @@ class RecorderContainer extends Component {
     uploadVideo(this.state.recordVideo.blob, this.state.subject);
   }
   handleClose() {
-    this.setState({
-      showModal: false,
-    });
+    this.props.displayRecorder(false);
   }
   render() {
     return (
       <Recorder
-        showModal={this.state.showModal}
+        showModal={this.props.recorderVisible}
         isRecording={this.state.isRecording}
         hasRecording={this.state.hasRecording}
         onRecord={() => this.handleRecord()}
@@ -111,4 +111,19 @@ class RecorderContainer extends Component {
   }
 }
 
-export default RecorderContainer;
+RecorderContainer.propTypes = {
+  displayRecorder: PropTypes.func.isRequired,
+  recorderVisible: PropTypes.bool.isRequired,
+};
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ displayRecorder }, dispatch);
+}
+
+function mapStateToProps({ ui }) {
+  return {
+    recorderVisible: ui.get('recorderVisible'),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RecorderContainer);
