@@ -39,7 +39,7 @@ function mapStateToProps({ ui }) {
   return {
     src: ui.get('src'),
     playerVisible: ui.get('playerVisible'),
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {

@@ -11,9 +11,6 @@ function getSignedRequest(blob) {
       console.log('Obtained S3 Key');
       console.log(res);
       return res;
-    }).catch((err) => {
-      console.warn('Could not get S3 Key');
-      console.log(err);
     });
 }
 
@@ -27,45 +24,70 @@ function uploadFile(blob, { awsInfo, s3Url }) {
     awsInfo.url, postData).then((res) => {
       console.log('Video uploaded');
       console.log(res);
-      res.s3Url = s3Url;
       return res;
-    }).catch((err) => {
-      console.warn('Could not upload file');
-      console.log(err);
     });
 }
 
-function updateDb(subject, { s3Url }) {
-  const dbPostData = {
+function createConversation(subject) {
+  const postData = {
     subject,
-    url: s3Url,
-    conversation: null,
   };
   const config = {
     headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
   };
-  console.log(dbPostData);
+  return axios.post(
+    '/api/v1/conversations/',
+    postData,
+    config)
+   .then((res) => {
+     console.log('Conversation Created');
+     console.log(res);
+     return Promise.resolve(res.data);
+   });
+}
+
+function createMessage(subject, conversationId, s3Url) {
+  const dbPostData = {
+    subject,
+    url: s3Url,
+    conversation: conversationId,
+  };
+  const config = {
+    headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+  };
   return axios.post(
     '/api/v1/messages/',
     dbPostData,
     config)
    .then((res) => {
-    console.log('Db Updated');
-    console.log(res);
-    return res;
-  }).catch((err) => {
-    console.warn('Could not update database');
-    console.log(err);
-  });
+     console.log('Message Created');
+     console.log(res);
+     return Promise.resolve(res.data);
+   });
 }
 
-export function uploadVideo(blob, subject) {
-  return getSignedRequest(blob)
-         .then((res) => uploadFile(blob, res.data)) // res = {data:{awsInfo, s3Url}, status, ...}
-         .then((res) => updateDb(subject, res))
-         .catch(() => {
-           console.warn('Error during upload');
-         });
+export function uploadVideo(blob, subject, conversation) {
+  // all I want for christmas is async/await !!
+  const s3Sign = getSignedRequest(blob);
+  const s3Upload = s3Sign.then(res => uploadFile(blob, res.data));
+  const convo = s3Upload.then(() => { // we only want to create a convo if upload succeeds
+    if (conversation === null) {
+      return createConversation(subject);
+    }
+    return Promise.resolve(conversation);
+  });
+  const message = Promise.all([s3Sign, convo])
+    .then(values => {
+      const [s3SignRes, convoResult] = values;
+      console.log('s3SignRes:', s3SignRes);
+      console.log('convoResult', convoResult);
+      return createMessage(subject, convoResult.pk, s3SignRes.data.s3Url);
+    });
+  return Promise.all(convo, message)
+                .then(values => {
+                  const [convoResult, messageResult] = values;
+                  return Promise.resolve(convoResult.messages.append(messageResult));
+                });
 }
 
 export function getConversations() {

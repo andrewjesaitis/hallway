@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { displayRecorder } from '../redux/ui';
+import { addMessage } from '../redux/conversations';
 import Recorder from '../components/Recorder';
-import { uploadVideo } from '../utils/api';
 
 class RecorderContainer extends Component {
   constructor(props) {
@@ -80,9 +80,11 @@ class RecorderContainer extends Component {
     });
   }
   handlePost() {
-    console.log('Uploading...');
-    console.log(this.state.recordVideo);
-    uploadVideo(this.state.recordVideo.blob, this.state.subject);
+    this.props.addMessage(
+      this.state.subject,
+      null,
+      this.state.recordVideo.blob
+    );
   }
   handleClose() {
     this.props.displayRecorder(false);
@@ -113,11 +115,12 @@ class RecorderContainer extends Component {
 
 RecorderContainer.propTypes = {
   displayRecorder: PropTypes.func.isRequired,
+  addMessage: PropTypes.func.isRequired,
   recorderVisible: PropTypes.bool.isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ displayRecorder }, dispatch);
+  return bindActionCreators({ displayRecorder, addMessage }, dispatch);
 }
 
 function mapStateToProps({ ui }) {

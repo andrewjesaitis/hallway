@@ -1,16 +1,11 @@
 from django.shortcuts import render
 
-from rest_framework import viewsets, mixins
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import viewsets
 
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 
-class ConversationViewSet(mixins.RetrieveModelMixin, 
-                          mixins.UpdateModelMixin,
-                          mixins.DestroyModelMixin,
-                          mixins.ListModelMixin,
-                          viewsets.GenericViewSet):
+class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     filter_fields = ('subject',)
@@ -18,5 +13,4 @@ class ConversationViewSet(mixins.RetrieveModelMixin,
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [AllowAny]
     filter_fields = ('conversation',)
