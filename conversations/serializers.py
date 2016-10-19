@@ -2,13 +2,6 @@ from rest_framework import serializers
 
 from .models import Conversation, Message
 
-class ConversationSerializer(serializers.ModelSerializer):
-    pk = serializers.IntegerField(read_only=True)
-    messages = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    class Meta:
-        model = Message
-        fields = ('pk', 'date_created', 'subject', 'messages')
-
 class MessageSerializer(serializers.ModelSerializer):
     pk = serializers.IntegerField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(
@@ -20,3 +13,11 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ('pk', 'user', 'date_created', 'subject', 'url', 'conversation')
+
+
+class ConversationSerializer(serializers.ModelSerializer):
+    pk = serializers.IntegerField(read_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
+    class Meta:
+        model = Conversation
+        fields = ('pk', 'date_created', 'subject', 'messages')

@@ -12,6 +12,7 @@ function ConversationList({ conversations }) {
       </div>
     );
   }
+  console.log(conversations);
   return (
     <div className="row">
       <div className="col-sm-12">
