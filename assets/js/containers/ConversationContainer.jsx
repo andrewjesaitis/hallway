@@ -14,6 +14,7 @@ class ConversationContainer extends Component {
       <Conversation
         subject={this.state.conversation.subject}
         conversationId={this.state.conversation.pk}
+        messages={this.state.conversation.messages}
       />
     );
   }
