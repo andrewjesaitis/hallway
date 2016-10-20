@@ -14,6 +14,7 @@ class RecorderContainer extends Component {
       s3Url: '',
       src: '',
       subject: '',
+      stream: null,
       isRecording: false,
       hasRecording: false,
       recordVideo: null,
@@ -25,11 +26,15 @@ class RecorderContainer extends Component {
       height: 360,
     };
   }
-  componentDidMount() {
-    this.requestUserMedia();
+  componentWillReceiveProps(newProps) {
+    // if we are (re)opening model, we want to record new stream
+    if (this.props.recorderVisible === false && newProps.recorderVisible === true) {
+      this.requestUserMedia();
+    }
   }
   isSubjectValid() {
     const length = this.state.subject.length;
+    if (length === 0) return;
     if (length < 120) return 'success';
     return 'error';
   }
@@ -38,7 +43,8 @@ class RecorderContainer extends Component {
   }
   requestUserMedia() {
     this.captureUserMedia((stream) => {
-      this.setState({ src: window.URL.createObjectURL(stream) });
+      this.setState({ stream,
+                      src: window.URL.createObjectURL(stream) });
     });
   }
   captureUserMedia(callback) {
@@ -62,6 +68,7 @@ class RecorderContainer extends Component {
         loop: false,
         controls: true,
         src: window.URL.createObjectURL(stream),
+        stream,
         recordVideo: new RecordRTC(stream, { type: 'video' }),
       });
       this.state.recordVideo.startRecording();
@@ -85,8 +92,15 @@ class RecorderContainer extends Component {
       this.props.recorderConversationId,
       this.state.recordVideo.blob
     );
+    this.handleClose();
   }
   handleClose() {
+    this.state.stream.getTracks().map(stream => stream.stop());
+    this.setState({
+      src: '',
+      subject: '',
+      stream: null,
+    });
     this.props.displayRecorder(false);
   }
   render() {
@@ -132,10 +146,3 @@ function mapStateToProps({ ui }) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecorderContainer);
-
-
-
-
-
-
-
