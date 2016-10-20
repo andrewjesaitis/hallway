@@ -18,8 +18,11 @@ function postMessage() {
 }
 
 function messagePosted(conversation) {
+  console.log('message posting action');
   return {
     type: POST_MESSAGE_SUCCESS,
+    isPosting: false,
+    lastUpdated: Date.now(),
     conversation,
   };
 }
@@ -69,16 +72,20 @@ function addMessage(subject, conversationId, blob) {
   return (dispatch, getState) => {
     dispatch(postMessage());
     let conversation;
-    if (conversation) {
+    if (conversationId) {
       const currentConversations = getState().conversations.get('conversations');
-      conversation = currentConversations.find( (item) => {
-        return item.get('pk', conversationId);
-      });
+      console.log("currentConversations", currentConversations);
+      console.log("sought conversationId:", conversationId);
+      conversation = currentConversations.find(item => item.get('pk') === conversationId).toJS();
+      console.log('returned converstaionID:', conversation.pk);
     } else {
       conversation = null;
     }
     return uploadVideo(blob, subject, conversation)
-      .then(convo => dispatch(messagePosted(convo)))
+      .then(convo => {
+        console.log("dispatching message posted action");
+        dispatch(messagePosted(convo));
+      })
       .catch(err => dispatch(messageFailedToPost(err)));
   };
 }
@@ -117,10 +124,17 @@ function conversations(state = initialConversationState, action) {
         error: {},
       });
     case POST_MESSAGE_SUCCESS:
-      return state.mergeDeep({
+      const idx = state.get('conversations')
+                                .findIndex(c => c.get('pk') === action.conversation.pk);
+      if (idx !== -1) {
+        state = state.updateIn(['conversations', idx, 'messages'],
+                                       arr => arr.push(action.conversation.messages.pop()));
+      } else {
+        state = state.update('conversations', arr => arr.push(action.conversation));
+      }
+      return state.merge({
         isPosting: action.isPosting,
         lastUpdated: action.lastUpdated,
-        conversations: [action.conversation], // note this depends on this array not being a immutable.js list
       });
     case POST_MESSAGE_ERROR:
       return state.merge({
@@ -133,3 +147,8 @@ function conversations(state = initialConversationState, action) {
 }
 
 export { conversations, fetchConversations, addMessage };
+
+
+
+
+

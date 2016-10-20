@@ -83,10 +83,12 @@ export function uploadVideo(blob, subject, conversation) {
       console.log('convoResult', convoResult);
       return createMessage(subject, convoResult.pk, s3SignRes.data.s3Url);
     });
-  return Promise.all(convo, message)
+  return Promise.all([convo, message])
                 .then(values => {
+                  console.log("combining convo and message");
                   const [convoResult, messageResult] = values;
-                  return Promise.resolve(convoResult.messages.append(messageResult));
+                  convoResult.messages.push(messageResult);
+                  return Promise.resolve(convoResult);
                 });
 }
 

@@ -82,7 +82,7 @@ class RecorderContainer extends Component {
   handlePost() {
     this.props.addMessage(
       this.state.subject,
-      null,
+      this.props.recorderConversationId,
       this.state.recordVideo.blob
     );
   }
@@ -117,6 +117,7 @@ RecorderContainer.propTypes = {
   displayRecorder: PropTypes.func.isRequired,
   addMessage: PropTypes.func.isRequired,
   recorderVisible: PropTypes.bool.isRequired,
+  recorderConversationId: PropTypes.number,
 };
 
 function mapDispatchToProps(dispatch) {
@@ -126,7 +127,15 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps({ ui }) {
   return {
     recorderVisible: ui.get('recorderVisible'),
+    recorderConversationId: ui.get('recorderConversationId'),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecorderContainer);
+
+
+
+
+
+
+

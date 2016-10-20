@@ -13,10 +13,11 @@ function displayPlayer(isVisible) {
   };
 }
 
-function displayRecorder(isVisible) {
+function displayRecorder(isVisible, recorderConversationId) {
   return {
     type: DISPLAY_RECORDER,
     isVisible,
+    recorderConversationId,
   };
 }
 
@@ -32,6 +33,7 @@ function setPlayerSource(src) {
 const initialUIState = Immutable.Map({
   playerVisible: false,
   recorderVisible: false,
+  recorderConversationId: null,
   src: '',
 });
 
@@ -40,7 +42,10 @@ function ui(state = initialUIState, action) {
     case DISPLAY_PLAYER:
       return state.update('playerVisible', (v) => action.isVisible);
     case DISPLAY_RECORDER:
-      return state.update('recorderVisible', (v) => action.isVisible);
+      return state.merge({
+        recorderVisible: action.isVisible,
+        recorderConversationId: action.isVisible ? action.recorderConversationId : null, //protect against maintaining id
+      });
     case WATCH_VIDEO:
       return state.update('src', (v) => action.src);
     default:

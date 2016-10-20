@@ -7,9 +7,6 @@ import PlayerContainer from '../containers/PlayerContainer';
 import { fetchConversations } from '../redux/conversations';
 
 class ConversationListContainer extends Component {
-  constructor() {
-    super();
-  }
   componentWillMount() {
     this.props.fetchConversations();
   }
@@ -33,6 +30,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps({ conversations }) {
+  console.log("convos mapping:", conversations);
   return {
     conversations: conversations.get('conversations').toJS(),
   };
