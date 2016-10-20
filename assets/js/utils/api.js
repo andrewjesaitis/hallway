@@ -47,8 +47,7 @@ function createConversation(subject) {
 }
 
 function createMessage(subject, conversationId, s3Url) {
-  const dbPostData = {
-    subject,
+  const postData = {
     url: s3Url,
     conversation: conversationId,
   };
@@ -57,7 +56,7 @@ function createMessage(subject, conversationId, s3Url) {
   };
   return axios.post(
     '/api/v1/messages/',
-    dbPostData,
+    postData,
     config)
    .then((res) => {
      console.log('Message Created');
@@ -81,7 +80,7 @@ export function uploadVideo(blob, subject, conversation) {
       const [s3SignRes, convoResult] = values;
       console.log('s3SignRes:', s3SignRes);
       console.log('convoResult', convoResult);
-      return createMessage(subject, convoResult.pk, s3SignRes.data.s3Url);
+      return createMessage(convoResult.pk, s3SignRes.data.s3Url);
     });
   return Promise.all([convo, message])
                 .then(values => {
