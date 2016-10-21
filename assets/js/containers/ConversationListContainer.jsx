@@ -30,7 +30,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps({ conversations }) {
-  console.log("convos mapping:", conversations);
   return {
     conversations: conversations.get('conversations').toJS(),
   };

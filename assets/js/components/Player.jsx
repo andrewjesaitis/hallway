@@ -1,17 +1,18 @@
 import React, { PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 
-function Player({ show, onClose, src, width, height }) {
+function Player({ show, handleClose, handleEnded, handleError, src, width, height }) {
+  console.log("rendering Player", src);
   return (
     <Modal show={show}>
       <Modal.Header>
-        <button type="button" className="close" aria-label="Close" onClick={onClose}>
+        <button type="button" className="close" aria-label="Close" onClick={handleClose}>
           <span aria-hidden="true">&times;</span>
         </button>
       </Modal.Header>
       <div className="row">
         <div className="col-sm-12 text-center">
-          <video autoPlay controls src={src} width={width} height={height} />
+          <video autoPlay controls src={src} width={width} height={height} onEnded={handleEnded} onError={handleError}/>
         </div>
       </div>
     </Modal>
@@ -20,8 +21,10 @@ function Player({ show, onClose, src, width, height }) {
 
 Player.propTypes = {
   show: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  src: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleEnded: PropTypes.func.isRequired,
+  handleError: PropTypes.func.isRequired,
+  src: PropTypes.string,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
 };

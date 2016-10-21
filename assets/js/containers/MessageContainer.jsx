@@ -14,7 +14,7 @@ class MessageContainer extends Component {
   }
   handleClick(e) {
     e.preventDefault();
-    this.props.setPlayerSource(this.state.message.url);
+    this.props.setPlayerSource([this.state.message.url]);
     this.props.displayPlayer(true);
   }
   render() {

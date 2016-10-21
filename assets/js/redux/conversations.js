@@ -18,7 +18,6 @@ function postMessage() {
 }
 
 function messagePosted(conversation) {
-  console.log('message posting action');
   return {
     type: POST_MESSAGE_SUCCESS,
     isPosting: false,
@@ -74,16 +73,12 @@ function addMessage(subject, conversationId, blob) {
     let conversation;
     if (conversationId) {
       const currentConversations = getState().conversations.get('conversations');
-      console.log("currentConversations", currentConversations);
-      console.log("sought conversationId:", conversationId);
       conversation = currentConversations.find(item => item.get('pk') === conversationId).toJS();
-      console.log('returned converstaionID:', conversation.pk);
     } else {
       conversation = null;
     }
     return uploadVideo(blob, subject, conversation)
       .then(convo => {
-        console.log("dispatching message posted action");
         dispatch(messagePosted(convo));
       })
       .catch(err => dispatch(messageFailedToPost(err)));
@@ -125,10 +120,10 @@ function conversations(state = initialConversationState, action) {
       });
     case POST_MESSAGE_SUCCESS:
       const idx = state.get('conversations')
-                                .findIndex(c => c.get('pk') === action.conversation.pk);
+                       .findIndex(c => c.get('pk') === action.conversation.pk);
       if (idx !== -1) {
         state = state.updateIn(['conversations', idx, 'messages'],
-                                       arr => arr.push(action.conversation.messages.pop()));
+                               arr => arr.push(action.conversation.messages.pop()));
       } else {
         state = state.update('conversations', arr => arr.push(action.conversation));
       }
@@ -147,8 +142,3 @@ function conversations(state = initialConversationState, action) {
 }
 
 export { conversations, fetchConversations, addMessage };
-
-
-
-
-

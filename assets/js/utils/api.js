@@ -78,13 +78,10 @@ export function uploadVideo(blob, subject, conversation) {
   const message = Promise.all([s3Sign, convo])
     .then(values => {
       const [s3SignRes, convoResult] = values;
-      console.log('s3SignRes:', s3SignRes);
-      console.log('convoResult', convoResult);
       return createMessage(convoResult.pk, s3SignRes.data.s3Url);
     });
   return Promise.all([convo, message])
                 .then(values => {
-                  console.log("combining convo and message");
                   const [convoResult, messageResult] = values;
                   convoResult.messages.push(messageResult);
                   return Promise.resolve(convoResult);
