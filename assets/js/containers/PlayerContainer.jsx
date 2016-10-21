@@ -31,6 +31,15 @@ class PlayerContainer extends Component {
       });
     }
   }
+  playPrevious() {
+    const previousVideo = this.state.curIdx - 1;
+    if (previousVideo >= 0) {
+      this.setState({
+        src: this.props.srcs[previousVideo],
+        curIdx: previousVideo,
+      });
+    }
+  }
   handleClose() {
     this.setState({
       curIdx: 0,
@@ -45,6 +54,15 @@ class PlayerContainer extends Component {
   handleEnded() {
     this.playNext();
   }
+  handlePrevious(e) {
+    e.preventDefault();
+    this.playPrevious();
+  }
+  handleNext(e) {
+    e.preventDefault();
+    this.playNext();
+  }
+
   render() {
     return (
       <Player
@@ -52,6 +70,8 @@ class PlayerContainer extends Component {
         handleClose={() => this.handleClose()}
         handleEnded={() => this.handleEnded()}
         handleError={(e) => this.handleError(e)}
+        handlePrevious={(e) => this.handlePrevious(e)}
+        handleNext={(e) => this.handleNext(e)}
         src={this.state.src}
         width={this.state.width}
         height={this.state.height}

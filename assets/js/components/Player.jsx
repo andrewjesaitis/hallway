@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 
-function Player({ show, handleClose, handleEnded, handleError, src, width, height }) {
+function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, src, width, height }) {
   console.log("rendering Player", src);
   return (
     <Modal show={show}>
@@ -11,8 +11,25 @@ function Player({ show, handleClose, handleEnded, handleError, src, width, heigh
         </button>
       </Modal.Header>
       <div className="row">
-        <div className="col-sm-12 text-center">
-          <video autoPlay controls src={src} width={width} height={height} onEnded={handleEnded} onError={handleError}/>
+        <div className="col-sm-1">
+          <a onClick={handlePrevious}>
+            <i className="material-icons md-48">keyboard_arrow_left</i>
+          </a>
+        </div>
+        <div className="col-sm-10 text-center">
+          <video
+            autoPlay
+            controls src={src}
+            width={width}
+            height={height}
+            onEnded={handleEnded}
+            onError={handleError}
+          />
+        </div>
+        <div className="col-sm-1">
+          <a onClick={handleNext}>
+            <i className="material-icons md-48">keyboard_arrow_right</i>
+          </a>
         </div>
       </div>
     </Modal>
@@ -30,4 +47,3 @@ Player.propTypes = {
 };
 
 export default Player;
-
