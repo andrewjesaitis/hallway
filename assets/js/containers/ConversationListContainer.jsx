@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import ConversationList from '../components/ConversationList';
 import PlayerContainer from '../containers/PlayerContainer';
+import ActionButtonContainer from '../containers/ActionButtonContainer';
 import { fetchConversations } from '../redux/conversations';
 
 class ConversationListContainer extends Component {
@@ -15,6 +16,7 @@ class ConversationListContainer extends Component {
       <div>
         <ConversationList conversations={this.props.conversations} />
         <PlayerContainer />
+        <ActionButtonContainer />
       </div>
     );
   }

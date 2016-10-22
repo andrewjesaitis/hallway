@@ -4,7 +4,9 @@ import { Button } from 'react-bootstrap';
 
 function ActionButton(props) {
   return (
-    <Button bsStyle="primary" className="navbar-btn" onClick={props.handleClick}>Post</Button>
+    <div className="btn-group floating-action-button">
+      <Button bsStyle="primary" onClick={props.handleClick}><i className="material-icons">add</i></Button>
+    </div>
   );
 }
 

@@ -7,8 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hallway</title>
     <!-- Core CSS - Include with every page -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="{% static 'css/hallway.css' %}" rel="stylesheet">
+    
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -32,23 +34,12 @@
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                <li>
-                  <a href="/accounts/profile">Profile</a>
-                </li>
-                <li>
-                  <a href="#">Conversations</a>
-                </li>
+                <li><a href="/accounts/profile">Profile</a></li>
+                <li><a href="#">Conversations</a></li>
                 <li class="divider"></li>
-                <li>
-                  <a href="#">Separated link</a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                  <a href="/accounts/logout">Logout</a>
-                </li>
+                <li><a href="/accounts/logout">Logout</a></li>
               </ul>
             </li>
-            <li id="react-action-button"></li>
             {% endif %}
           </ul>
         </div>
