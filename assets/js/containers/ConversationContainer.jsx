@@ -17,6 +17,7 @@ class ConversationContainer extends Component {
     this.props.displayRecorder(true, this.props.conversation.pk);
   }
   render() {
+    console.log(this.props.conversation.messages)
     return (
       <Conversation
         subject={this.props.conversation.subject}

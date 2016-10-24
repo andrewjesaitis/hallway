@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 function ActionButton(props) {
   return (
     <div className="btn-group floating-action-button">
-      <Button bsStyle="primary" onClick={props.handleClick}><i className="material-icons">add</i></Button>
+      <Button bsStyle="danger" onClick={props.handleClick}><i className="material-icons">video_call</i></Button>
     </div>
   );
 }

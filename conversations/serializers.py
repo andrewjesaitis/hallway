@@ -4,8 +4,9 @@ from .models import Conversation, Message
 
 class MessageSerializer(serializers.ModelSerializer):
     pk = serializers.IntegerField(read_only=True)
-    user = serializers.PrimaryKeyRelatedField(
+    user = serializers.SlugRelatedField(
         read_only=True,
+        slug_field='email',
         default=serializers.CurrentUserDefault()
     )
     conversation = serializers.PrimaryKeyRelatedField(

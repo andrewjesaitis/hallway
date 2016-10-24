@@ -1,21 +1,27 @@
 import React, { PropTypes } from 'react';
+import TimeAgo from 'react-timeago';
 
 import MessageListContainer from '../containers/MessageListContainer';
 
-function Conversation({ subject, handleReply, handlePlay, conversationId, messages }) {
+function Conversation({ subject, handlePlay, conversationId, messages }) {
   return (
-    <div>
-      <div className="row">
-        <div className="col-sm-12">
-          <h1><a onClick={handlePlay}>{subject}</a> <a onClick={handleReply} role="button"><i className="material-icons">reply</i></a></h1>
+    <div className="col-sm-6">
+      <div onClick={handlePlay} className="conversation panel panel-primary">
+        <div className="panel-heading">
+          <div className="panel-title">
+            {subject}
+          </div>
         </div>
-      </div>
-      <div className="row">
-        <div className="col-sm-12">
+        <div className="panel-body">
           <MessageListContainer
             conversationId={conversationId}
             messages={messages}
           />
+        </div>
+        <div className="panel-footer">
+          <div className="small text-right">
+            Last Updated: <TimeAgo date={messages[messages.length - 1].date_created} />
+          </div>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ class MessageContainer extends Component {
     super(props);
     this.state = {
       message: this.props.message,
+      gravatarUrl: '',
     };
   }
   handleClick(e) {
@@ -19,7 +20,7 @@ class MessageContainer extends Component {
   }
   render() {
     return (
-      <Message handleClick={(e) => this.handleClick(e)} s3Url={this.state.message.url} />
+      <Message handleClick={(e) => this.handleClick(e)} email={this.state.message.user}  />
     );
   }
 }

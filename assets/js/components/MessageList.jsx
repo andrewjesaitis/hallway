@@ -4,7 +4,7 @@ import MessageContainer from '../containers/MessageContainer';
 
 function MessageList({ messages }) {
   return (
-    <ul>
+    <ul className="list-inline message-list">
       {
         messages.map((message, idx) =>
           <MessageContainer message={message} idx={idx} key={message.pk} />
