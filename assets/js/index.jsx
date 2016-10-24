@@ -10,6 +10,8 @@ import { conversations } from './redux/conversations';
 import ConversationListContainer from './containers/ConversationListContainer';
 import ActionButtonContainer from './containers/ActionButtonContainer';
 
+require('../css/main.less');
+
 const loggerMiddleware = createLogger();
 
 const store = createStore(
@@ -28,11 +30,4 @@ ReactDOM.render(
     <ConversationListContainer />
   </Provider>,
   document.getElementById('react-app')
-);
-
-ReactDOM.render(
-  <Provider store={store}>
-    <ActionButtonContainer />
-  </Provider>,
-  document.getElementById('react-action-button')
 );

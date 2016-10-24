@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load render_bundle from webpack_loader %}
+
 {% block content %}
 {% if user.is_authenticated %}
 <div id="react-app"></div>
@@ -14,5 +14,4 @@
   </div>
 </div>
 {% endif %}
-{% render_bundle 'main' %}
 {% endblock content %}
