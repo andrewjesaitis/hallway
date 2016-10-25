@@ -9,7 +9,7 @@ class ConversationContainer extends Component {
   handlePlay(e) {
     e.preventDefault();
     const urls = this.props.conversation.messages.map(item => item.url);
-    this.props.setPlayerSource(urls);
+    this.props.setPlayerSource(urls, this.props.conversation.subject)
     this.props.displayPlayer(true);
   }
   handleReply(e) {

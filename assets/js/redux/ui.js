@@ -4,6 +4,7 @@ const DISPLAY_PLAYER = 'DISPLAY_PLAYER';
 const DISPLAY_RECORDER = 'DISPLAY_RECORDER';
 const WATCH_VIDEO = 'WATCH_VIDEO';
 
+
 // Actions
 
 function displayPlayer(isVisible) {
@@ -21,12 +22,14 @@ function displayRecorder(isVisible, recorderConversationId) {
   };
 }
 
-function setPlayerSource(srcs) {
+function setPlayerSource(srcs, subject) {
   return {
     type: WATCH_VIDEO,
     srcs,
+    subject,
   };
 }
+
 
 // Reducer
 
@@ -34,6 +37,7 @@ const initialUIState = Immutable.Map({
   playerVisible: false,
   recorderVisible: false,
   recorderConversationId: null,
+  subject: '',
   srcs: [],
 });
 
@@ -47,6 +51,7 @@ function ui(state = initialUIState, action) {
         recorderConversationId: action.isVisible ? action.recorderConversationId : null, //protect against maintaining id
       });
     case WATCH_VIDEO:
+      state = state.merge({ subject: action.subject });
       return state.mergeIn(['srcs'], action.srcs);
     default:
       return state;
@@ -54,3 +59,13 @@ function ui(state = initialUIState, action) {
 }
 
 export { ui, displayRecorder, displayPlayer, setPlayerSource };
+
+
+
+
+
+
+
+
+
+

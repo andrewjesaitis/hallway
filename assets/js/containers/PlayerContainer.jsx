@@ -73,8 +73,7 @@ class PlayerContainer extends Component {
         handlePrevious={(e) => this.handlePrevious(e)}
         handleNext={(e) => this.handleNext(e)}
         src={this.state.src}
-        width={this.state.width}
-        height={this.state.height}
+        subject={this.props.subject}
       />
     );
   }
@@ -82,6 +81,7 @@ class PlayerContainer extends Component {
 
 PlayerContainer.propTypes = {
   srcs: React.PropTypes.array,
+  subject: PropTypes.string.isRequired,
   playerVisible: PropTypes.bool.isRequired,
   displayPlayer: PropTypes.func.isRequired,
 };
@@ -89,6 +89,7 @@ PlayerContainer.propTypes = {
 function mapStateToProps({ ui }) {
   return {
     srcs: ui.get('srcs'),
+    subject: ui.get('subject'),
     playerVisible: ui.get('playerVisible'),
   };
 }
