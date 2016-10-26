@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 
 function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, src, subject }) {
   return (
     <Modal show={show}>
-      <Modal.Body>
+      <Modal.Header>
         <div className="row">
           <div className="col-sm-10 player-title">
-            <h3>{subject}</h3>
+            <h4>{subject}</h4>
           </div>
           <div className="col-sm-2">
             <button type="button" className="close pull-right" aria-label="Close" onClick={handleClose}>
@@ -15,6 +15,8 @@ function Player({ show, handleClose, handleEnded, handleError, handlePrevious, h
             </button>
           </div>
         </div>
+      </Modal.Header>
+        <Modal.Body>
         <div className="row player text-center">
           <div className="col-sm-1 nav-arrow">
             <a onClick={handlePrevious}>
@@ -37,12 +39,14 @@ function Player({ show, handleClose, handleEnded, handleError, handlePrevious, h
             </a>
           </div>
         </div>
+      </Modal.Body>
+      <Modal.Footer>
         <div className="row">
           <div className="col-sm-12">
-            <p />
+            <Button bsStyle="primary">Reply</Button>
           </div>
         </div>
-      </Modal.Body>
+      </Modal.Footer>
     </Modal>
   );
 }
