@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Modal, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
+import { Modal, Button, FormGroup, FormControl, HelpBlock } from 'react-bootstrap';
 
 function Recorder({ showModal, isRecording, hasRecording, onRecord,
                     src, onClose, onPost, autoPlay, muted,
@@ -8,9 +8,16 @@ function Recorder({ showModal, isRecording, hasRecording, onRecord,
   return (
     <Modal show={showModal}>
       <Modal.Header>
-        <button type="button" className="close" aria-label="Close" onClick={onClose}>
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <div className="row">
+          <div className="col-sm-10">
+            <h4>Start a new conversation</h4>
+          </div>
+          <div className="col-sm-2">
+            <button type="button" className="close" aria-label="Close" onClick={onClose}>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
       </Modal.Header>
       <Modal.Body>
         <div className="row">
@@ -30,7 +37,6 @@ function Recorder({ showModal, isRecording, hasRecording, onRecord,
           controlId="videoSubject"
           validationState={isSubjectValid()}
         >
-          <ControlLabel>Subject</ControlLabel>
           <FormControl
             type="text"
             value={subject}
