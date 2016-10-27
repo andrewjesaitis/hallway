@@ -1,17 +1,16 @@
 import React, { PropTypes } from 'react';
 import Gravatar from 'react-gravatar';
 
-function Message({ handleClick, email }) {
+function Message({ email }) {
   return (
     <li>
-      <a onClick={handleClick}><Gravatar email={email} className="img-circle box-shadow" /></a>
+      <Gravatar email={email} className="img-circle box-shadow" />
     </li>
   );
 }
 
 Message.propTypes = {
   email: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired,
 };
 
 export default Message;

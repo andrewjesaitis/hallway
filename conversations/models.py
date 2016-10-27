@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 
 class Conversation(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
-    subject = models.CharField(max_length=120)
+    last_updated = models.DateTimeField(auto_now=True)
+    subject = models.CharField(max_length=120)    
 
     def __unicode__(self):
         return "{}".format(self.subject)
@@ -19,3 +20,7 @@ class Message(models.Model):
 
     def __unicode__(self):
         return "{}'s message in {}".format(self.user.username, self.conversation.subject)
+
+    def save(self, *args, **kwargs):
+        super(Message, self).save(*args, **kwargs)
+        self.conversation.save()

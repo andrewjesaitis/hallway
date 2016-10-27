@@ -1,64 +1,79 @@
 import Immutable from 'immutable';
 
+const SELECT_CONVERSATION = 'SELECT_CONVERSATION';
+const CLEAR_CONVERSATION = 'CLEAR_CONVERSATION';
 const DISPLAY_PLAYER = 'DISPLAY_PLAYER';
 const DISPLAY_RECORDER = 'DISPLAY_RECORDER';
-const WATCH_VIDEO = 'WATCH_VIDEO';
-
 
 // Actions
 
-function displayPlayer(isVisible) {
+function selectConversation(id, subject, srcs) {
+  return {
+    type: SELECT_CONVERSATION,
+    id,
+    subject,
+    srcs
+  };
+}
+
+function clearConversation() {
+  return {
+    type: CLEAR_CONVERSATION,
+  };
+}
+
+function displayPlayer(isVisible, conversationId, subject, srcs) {
   return {
     type: DISPLAY_PLAYER,
     isVisible,
   };
 }
 
-function displayRecorder(isVisible, recorderConversationId) {
+function displayRecorder(isVisible, subject, conversationId) {
   return {
     type: DISPLAY_RECORDER,
     isVisible,
-    recorderConversationId,
   };
 }
-
-function setPlayerSource(srcs, subject) {
-  return {
-    type: WATCH_VIDEO,
-    srcs,
-    subject,
-  };
-}
-
 
 // Reducer
 
 const initialUIState = Immutable.Map({
   playerVisible: false,
   recorderVisible: false,
-  recorderConversationId: null,
+  conversationId: null,
   subject: '',
-  srcs: [],
+  srcs: Immutable.List(),
 });
 
 function ui(state = initialUIState, action) {
   switch (action.type) {
+    case SELECT_CONVERSATION:
+      return state.merge({
+        subject: action.subject,
+        conversationId: action.id,
+        srcs: action.srcs,
+      });
+    case CLEAR_CONVERSATION:
+      return state.merge({
+        subject: '',
+        conversationId: null,
+        srcs: Immutable.List(),
+      });
     case DISPLAY_PLAYER:
-      return state.update('playerVisible', (v) => action.isVisible);
+      return state.merge({
+        playerVisible: action.isVisible,
+      });
     case DISPLAY_RECORDER:
       return state.merge({
         recorderVisible: action.isVisible,
-        recorderConversationId: action.isVisible ? action.recorderConversationId : null, //protect against maintaining id
       });
-    case WATCH_VIDEO:
-      state = state.merge({ subject: action.subject });
-      return state.mergeIn(['srcs'], action.srcs);
     default:
       return state;
   }
 }
 
-export { ui, displayRecorder, displayPlayer, setPlayerSource };
+export { ui, selectConversation, clearConversation, displayRecorder, displayPlayer };
 
 
 

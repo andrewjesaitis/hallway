@@ -46,7 +46,7 @@ function createConversation(subject) {
    });
 }
 
-function createMessage(subject, conversationId, s3Url) {
+function createMessage(conversationId, s3Url) {
   const postData = {
     url: s3Url,
     conversation: conversationId,
@@ -70,14 +70,17 @@ export function uploadVideo(blob, subject, conversation) {
   const s3Sign = getSignedRequest(blob);
   const s3Upload = s3Sign.then(res => uploadFile(blob, res.data));
   const convo = s3Upload.then(() => { // we only want to create a convo if upload succeeds
+    console.log(conversation);
     if (conversation === null) {
       return createConversation(subject);
     }
+    conversation.last_updated = new Date().getTime();
     return Promise.resolve(conversation);
   });
   const message = Promise.all([s3Sign, convo])
     .then(values => {
       const [s3SignRes, convoResult] = values;
+      console.log(values);
       return createMessage(convoResult.pk, s3SignRes.data.s3Url);
     });
   return Promise.all([convo, message])
@@ -98,7 +101,7 @@ export function getConversations() {
   ).then((res) => {
     console.log('Conversations Retrieved');
     console.log(res);
-    return res;
+    return Promise.resolve(res.data);
   }).catch((err) => {
     console.warn('Could not retrieve Conversations');
     console.log(err);

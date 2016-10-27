@@ -1,44 +1,40 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Immutable from 'immutable';
 
-import { displayRecorder, displayPlayer, setPlayerSource } from '../redux/ui';
+import { displayPlayer, selectConversation } from '../redux/ui';
 import Conversation from '../components/Conversation';
 
 class ConversationContainer extends Component {
   handlePlay(e) {
     e.preventDefault();
-    const urls = this.props.conversation.messages.map(item => item.url);
-    this.props.setPlayerSource(urls, this.props.conversation.subject)
+    const urls = this.props.conversation.get('messages').map(item => item.get('url'));
     this.props.displayPlayer(true);
-  }
-  handleReply(e) {
-    e.preventDefault();
-    this.props.displayRecorder(true, this.props.conversation.pk);
+    this.props.selectConversation(this.props.conversation.get('pk'),
+                                  this.props.conversation.get('subject'),
+                                  urls);
   }
   render() {
-    console.log(this.props.conversation.messages)
     return (
       <Conversation
-        subject={this.props.conversation.subject}
+        subject={this.props.conversation.get('subject')}
         handlePlay={e => this.handlePlay(e)}
-        handleReply={(e) => this.handleReply(e)}
-        conversationId={this.props.conversation.pk}
-        messages={this.props.conversation.messages}
+        conversationId={this.props.conversation.get('pk')}
+        messages={this.props.conversation.get('messages')}
       />
     );
   }
 }
 
 ConversationContainer.propTypes = {
-  conversation: PropTypes.object.isRequired,
-  displayRecorder: PropTypes.func.isRequired,
+  conversation: PropTypes.instanceOf(Immutable.Map).isRequired,
   displayPlayer: PropTypes.func.isRequired,
-  setPlayerSource: PropTypes.func.isRequired,
+  selectConversation: PropTypes.func.isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ displayRecorder, displayPlayer, setPlayerSource }, dispatch);
+  return bindActionCreators({ selectConversation, displayPlayer }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(ConversationContainer);

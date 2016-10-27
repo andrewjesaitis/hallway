@@ -3,7 +3,7 @@ import RecordRTC from 'recordrtc';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { displayRecorder } from '../redux/ui';
+import { displayRecorder, clearConversation } from '../redux/ui';
 import { addMessage } from '../redux/conversations';
 import Recorder from '../components/Recorder';
 
@@ -89,7 +89,7 @@ class RecorderContainer extends Component {
   handlePost() {
     this.props.addMessage(
       this.state.subject,
-      this.props.recorderConversationId,
+      this.props.conversationId,
       this.state.recordVideo.blob
     );
     this.handleClose();
@@ -101,6 +101,7 @@ class RecorderContainer extends Component {
       subject: '',
       stream: null,
     });
+    this.props.clearConversation();
     this.props.displayRecorder(false);
   }
   render() {
@@ -129,19 +130,20 @@ class RecorderContainer extends Component {
 
 RecorderContainer.propTypes = {
   displayRecorder: PropTypes.func.isRequired,
+  clearConversation: PropTypes.func.isRequired,
   addMessage: PropTypes.func.isRequired,
   recorderVisible: PropTypes.bool.isRequired,
-  recorderConversationId: PropTypes.number,
+  conversationId: PropTypes.number,
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ displayRecorder, addMessage }, dispatch);
+  return bindActionCreators({ clearConversation, displayRecorder, addMessage }, dispatch);
 }
 
 function mapStateToProps({ ui }) {
   return {
     recorderVisible: ui.get('recorderVisible'),
-    recorderConversationId: ui.get('recorderConversationId'),
+    conversationId: ui.get('conversationId'),
   };
 }
 

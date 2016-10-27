@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, src, subject }) {
+function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, handleReply, src, subject }) {
   return (
     <Modal show={show}>
       <Modal.Header>
@@ -10,13 +10,13 @@ function Player({ show, handleClose, handleEnded, handleError, handlePrevious, h
             <h4>{subject}</h4>
           </div>
           <div className="col-sm-2">
-            <button type="button" className="close pull-right" aria-label="Close" onClick={handleClose}>
+            <button type="button" className="close" aria-label="Close" onClick={handleClose}>
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
         </div>
       </Modal.Header>
-        <Modal.Body>
+      <Modal.Body>
         <div className="row player text-center">
           <div className="col-sm-1 nav-arrow">
             <a onClick={handlePrevious}>
@@ -43,7 +43,7 @@ function Player({ show, handleClose, handleEnded, handleError, handlePrevious, h
       <Modal.Footer>
         <div className="row">
           <div className="col-sm-12">
-            <Button bsStyle="primary">Reply</Button>
+            <Button bsStyle="primary" onClick={handleReply}>Reply</Button>
           </div>
         </div>
       </Modal.Footer>
@@ -56,6 +56,9 @@ Player.propTypes = {
   handleClose: PropTypes.func.isRequired,
   handleEnded: PropTypes.func.isRequired,
   handleError: PropTypes.func.isRequired,
+  handlePrevious: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
+  handleReply: PropTypes.func.isRequired,
   src: PropTypes.string,
   subject: PropTypes.string.isRequired,
 };

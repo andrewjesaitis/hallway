@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Immutable from 'immutable';
 
 import ConversationList from '../components/ConversationList';
 import PlayerContainer from '../containers/PlayerContainer';
@@ -24,7 +25,7 @@ class ConversationListContainer extends Component {
 
 ConversationListContainer.propTypes = {
   fetchConversations: PropTypes.func.isRequired,
-  conversations: PropTypes.array.isRequired,
+  conversations: PropTypes.instanceOf(Immutable.List).isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
@@ -33,7 +34,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps({ conversations }) {
   return {
-    conversations: conversations.get('conversations').toJS(),
+    conversations: conversations.get('conversations'),
   };
 }
 

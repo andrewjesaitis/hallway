@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import Immutable from 'immutable';
 
 import ConversationContainer from '../containers/ConversationContainer';
 
@@ -18,7 +19,7 @@ function ConversationList({ conversations }) {
         <ul>
           {
             conversations.map((conversation, idx) =>
-              <ConversationContainer conversation={conversation} idx={idx} key={conversation.pk} />
+              <ConversationContainer conversation={conversation} idx={idx} key={conversation.get('pk')} />
             )
            }
         </ul>
@@ -28,7 +29,7 @@ function ConversationList({ conversations }) {
 }
 
 ConversationList.propTypes = {
-  conversations: PropTypes.array.isRequired,
+  conversations: PropTypes.instanceOf(Immutable.List).isRequired,
 };
 
 export default ConversationList;

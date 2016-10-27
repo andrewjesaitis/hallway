@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import Immutable from 'immutable';
 
 import MessageContainer from '../containers/MessageContainer';
 
@@ -7,7 +8,7 @@ function MessageList({ messages }) {
     <ul className="list-inline message-list">
       {
         messages.map((message, idx) =>
-          <MessageContainer message={message} idx={idx} key={message.pk} />
+          <MessageContainer message={message} idx={idx} key={message.get('pk')} />
         )
        }
     </ul>
@@ -15,7 +16,7 @@ function MessageList({ messages }) {
 }
 
 MessageList.propTypes = {
-  messages: PropTypes.array.isRequired,
+  messages: PropTypes.instanceOf(Immutable.List).isRequired,
 };
 
 export default MessageList;
