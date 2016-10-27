@@ -12,6 +12,7 @@
     
   </head>
   <body>
+    {% block navbar %}
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -44,9 +45,20 @@
         </div>
       </div>
     </nav>
+    {% endblock %}
     <div class="container-fluid">
     {% block content %}
     {% endblock %}
+    <footer>
+      <div class="row">
+        <div class="col-sm-6">
+          <p><i class="material-icons md-18">av_timer</i>Goes to 11.</p>
+        </div>
+        <div class="col-sm-6">
+          <p class="text-right">Copyright &copy; Andrew Jesaitis 2016</p>
+        </div>
+      </div>
+    </footer>
     {% render_bundle 'main' %}
     </div>
 
