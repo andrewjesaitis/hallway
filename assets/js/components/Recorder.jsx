@@ -21,8 +21,10 @@ function Recorder({ showModal, isRecording, hasRecording, onRecord,
       </Modal.Header>
       <Modal.Body>
         <div className="row">
-          <div className="col-sm-12 text-center">
+          <div className="col-sm-12 text-center embed-responsive embed-responsive-16by9">
             <video
+              key={src}
+              className="embed-responsive-item"
               autoPlay={autoPlay}
               muted={muted}
               controls={controls}
@@ -64,7 +66,7 @@ Recorder.propTypes = {
   isRecording: PropTypes.bool.isRequired,
   hasRecording: PropTypes.bool.isRequired,
   onRecord: PropTypes.func.isRequired,
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   onClose: PropTypes.func.isRequired,
   onPost: PropTypes.func.isRequired,
   autoPlay: PropTypes.bool.isRequired,
@@ -79,10 +81,3 @@ Recorder.propTypes = {
 };
 
 export default Recorder;
-
-
-
-
-
-
-

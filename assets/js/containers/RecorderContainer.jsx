@@ -11,7 +11,6 @@ class RecorderContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      s3Url: '',
       src: '',
       subject: '',
       stream: null,
@@ -61,6 +60,7 @@ class RecorderContainer extends Component {
     }
   }
   startRecording() {
+    this.state.stream.getTracks().map(stream => stream.stop());
     this.captureUserMedia((stream) => {
       this.setState({
         isRecording: true,
