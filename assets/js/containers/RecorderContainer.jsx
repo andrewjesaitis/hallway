@@ -43,7 +43,9 @@ class RecorderContainer extends Component {
   requestUserMedia() {
     this.captureUserMedia((stream) => {
       this.setState({ stream,
-                      src: window.URL.createObjectURL(stream) });
+                      src: window.URL.createObjectURL(stream),
+                      recordVideo: new RecordRTC(stream, { type: 'video' }),
+      });
     });
   }
   captureUserMedia(callback) {
@@ -60,19 +62,13 @@ class RecorderContainer extends Component {
     }
   }
   startRecording() {
-    this.state.stream.getTracks().map(stream => stream.stop());
-    this.captureUserMedia((stream) => {
-      this.setState({
-        isRecording: true,
-        muted: true,
-        loop: false,
-        controls: true,
-        src: window.URL.createObjectURL(stream),
-        stream,
-        recordVideo: new RecordRTC(stream, { type: 'video' }),
-      });
-      this.state.recordVideo.startRecording();
+    this.setState({
+      isRecording: true,
+      muted: true,
+      loop: false,
+      controls: true,
     });
+    this.state.recordVideo.startRecording();
   }
   stopRecording() {
     this.setState({
@@ -100,6 +96,8 @@ class RecorderContainer extends Component {
       src: '',
       subject: '',
       stream: null,
+      muted: true,
+      controls: false,
     });
     this.props.clearConversation();
     this.props.displayRecorder(false);
