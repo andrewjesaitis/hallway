@@ -1,75 +1,79 @@
 {% extends 'base.html' %}
+
+{% block bodytag %}
+<body class="bg-image">
+{% endblock %}
+
 {% block navbar %}
 {# no navbar on home page #}
 {% endblock %}
+
 {% block content %}
 {% if user.is_authenticated %}
 <div id="react-app"></div>
 {% else %}
 
 <!-- first section - Home -->
-<div class="bg-container">
-  <div id="splash">
+<div id="splash">
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3 text-center well">
+      <div class="splash-content">
+        <h1>Hallway</h1>
+        <h3>Interact like a human</h3>
+        <a href="/accounts/login" class="btn btn-default btn-lg">Login</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="services" class="pad-section">
+  <div class="container">
+    <h2 class="text-center">What is Hallway?</h2> <hr />
+    <div class="row text-center">
+      <div class="col-sm-3 col-xs-6">
+        <i class="material-icons">face</i>
+        <h4>See their face</h4>
+        <p>Don't miss what was unsaid in an interaction</p>
+      </div>
+      <div class="col-sm-3 col-xs-6">
+        <i class="material-icons">schedule</i>
+        <h4>Respond on your own time</h4>
+        <p>Unlike video conferencing, you can take as long as you need to formulate your thoughts before responding.</p>
+      </div>
+      <div class="col-sm-3 col-xs-6">
+        <i class="material-icons">cloud</i>
+        <h4>No special software</h4>
+        <p>No need to download plugins or specially configure your computer. Just hit record and be heard.</p>
+      </div>
+      <div class="col-sm-3 col-xs-6">
+        <i class="material-icons">lock</i>
+        <h4>Private</h4>
+        <p>Your conversation stays private, so you can speak freely.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /third section -->
+<!-- fourth section - Information -->
+<div id="information" class="pad-section">
+  <div class="container">
     <div class="row">
-      <div class="col-sm-6 col-sm-offset-3 text-center well">
-        <div class="splash-content">
-          <h1>Hallway</h1>
-          <h3>Interact like a human</h3>
-          <a href="/accounts/login" class="btn btn-default btn-lg">Login</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="services" class="pad-section">
-    <div class="container">
-      <h2 class="text-center">What is Hallway?</h2> <hr />
-      <div class="row text-center">
-        <div class="col-sm-3 col-xs-6">
-          <i class="material-icons">face</i>
-          <h4>See their face</h4>
-          <p>Don't miss what was unsaid in an interaction</p>
-        </div>
-        <div class="col-sm-3 col-xs-6">
-          <i class="material-icons">schedule</i>
-          <h4>Respond on your own time</h4>
-          <p>Unlike video conferencing, you can take as long as you need to formulate your thoughts before responding.</p>
-        </div>
-        <div class="col-sm-3 col-xs-6">
-          <i class="material-icons">cloud</i>
-          <h4>No special software</h4>
-          <p>No need to download plugins or specially configure your computer. Just hit record and be heard.</p>
-        </div>
-        <div class="col-sm-3 col-xs-6">
-          <i class="material-icons">lock</i>
-          <h4>Private</h4>
-          <p>Your conversation stays private, so you can speak freely.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- /third section -->
-  <!-- fourth section - Information -->
-  <div id="information" class="pad-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h2 class="panel-title">Why use Hallway?</h2>
-            </div>
-            <div class="panel-body lead">
-              Developing social connections in the classroom (online or offline) is critical to student success. It allows students to explore knowledge safely, helps groups become cohesive, and allows for nuanced feedback that helps students improve. With the advent of high speed internet connections, online classrooms need not suffer from the poverty that rich communication provides. Hallway provides an asynchronous link, so you can get to know your classmates personally.
-            </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">Why use Hallway?</h2>
+          </div>
+          <div class="panel-body lead">
+            Developing social connections in the classroom (online or offline) is critical to student success. It allows students to explore knowledge safely, helps groups become cohesive, and allows for nuanced feedback that helps students improve. With the advent of high speed internet connections, online classrooms need not suffer from the poverty that rich communication provides. Hallway provides an asynchronous link, so you can get to know your classmates personally.
           </div>
         </div>
-        <div class="col-sm-6">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h2 class="panel-title">Helps all types of students</h2>
-            </div>
-            <div class="panel-body lead">
-              All students can benefit from increased social presence. Researchers have found that extroverts sometimes find it easier to express themselves via speech than writing so they generally prefer video over text based participation. Introverts liked the ability to record their considered thoughts without fear of being drowned-out in a traditional classroom. Finally, the English language learner found it helpful to practice a different set of communication skills.<sup><a href="https://www.mentormob.com/hosted/cards/71178_cfc5725a0c013f51c6279e4e3fdaed03.pdf">[1]</a></sup>
-            </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">Helps all types of students</h2>
+          </div>
+          <div class="panel-body lead">
+            All students can benefit from increased social presence. Researchers have found that extroverts sometimes find it easier to express themselves via speech than writing so they generally prefer video over text based participation. Introverts liked the ability to record their considered thoughts without fear of being drowned-out in a traditional classroom. Finally, the English language learner found it helpful to practice a different set of communication skills.<sup><a href="https://www.mentormob.com/hosted/cards/71178_cfc5725a0c013f51c6279e4e3fdaed03.pdf">[1]</a></sup>
           </div>
         </div>
       </div>
@@ -77,15 +81,15 @@
   </div>
   <!-- footer -->
   <footer>
-      <div class="row">
-        <div class="col-sm-6">
-          <p><i class="material-icons md-18">av_timer</i>Goes to 11.</p>
-        </div>
-        <div class="col-sm-6">
-          <p class="text-right">Copyright &copy; Andrew Jesaitis 2016</p>
-        </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <p><i class="material-icons md-18">av_timer</i>Goes to 11.</p>
       </div>
-    </footer>
+      <div class="col-sm-6">
+        <p class="text-right">Copyright &copy; Andrew Jesaitis 2016</p>
+      </div>
+    </div>
+  </footer>
   <!-- /footer -->
   {% endif %}
   {% endblock content %}
