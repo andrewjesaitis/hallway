@@ -11,10 +11,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
   </head>
-  {% block bodytag %}
-  <body>
-  {% endblock %}
-    {% block navbar %}
+  <body {% if not user.is_authenticated %}class="bg-image"{% endif %}>
+    {% if user.is_authenticated %}
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -47,7 +45,7 @@
         </div>
       </div>
     </nav>
-    {% endblock %}
+    {% endif %}
     <div class="container-fluid">
     {% block content %}
     {% endblock %}

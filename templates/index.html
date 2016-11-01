@@ -1,13 +1,5 @@
 {% extends 'base.html' %}
 
-{% block bodytag %}
-<body class="bg-image">
-{% endblock %}
-
-{% block navbar %}
-{# no navbar on home page #}
-{% endblock %}
-
 {% block content %}
 {% if user.is_authenticated %}
 <div id="react-app"></div>
