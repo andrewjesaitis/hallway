@@ -5,10 +5,12 @@
 {% block content %}
 <div class="row">
   <div class="col-xs-12">
-  <h1>Profile Details</h1>
+    <h2>Profile Details</h2>
   </div>
 </div>
 <div class="row">
+<div class="col-md-8 col-sm-12 well">
+  <div class="row">
   <div class="col-sm-3 text-center">
     <div class="row">
       <div class="col-xs-12">
@@ -20,12 +22,22 @@
     </div>
   </div>
   <div class="col-sm-9">
-    <form method="post">
-      {% csrf_token %}
-      {% crispy form form.helper %}
-      {% crispy profile_form profile_form.helper %}
-      <input type="submit" class="btn btn-primary" value="Save">
+    <div class="row">
+      <form method="post">
+        {% csrf_token %}
+        <div class="col-sm-6">
+          <h5>Basic Info</h5>
+          {% crispy form form.helper %}
+        </div>
+        <div class="col-sm-6">
+          <h5>Social Accounts</h5>
+          {% crispy profile_form profile_form.helper %}
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary pull-right" value="Save">
     </form>
   </div>
+  </div>
+</div>
 </div>
 {% endblock content %}
