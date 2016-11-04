@@ -16,6 +16,9 @@ class Profile(models.Model):
 class DiscussionGroup(models.Model):
     name = models.CharField(max_length=100)
     date_created = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, 
+                                   null=False, 
+                                   related_name='created_by')
 
     def __str__(self):
         return "{}".format(self.name)
@@ -26,7 +29,7 @@ class Invite(models.Model):
     associated_user = models.ForeignKey(User, 
                                         null=True, related_name='invites')
     discussion_group = models.ForeignKey(DiscussionGroup, 
-                                         null=False, related_name='discussion_groups')
+                                         null=False, related_name='invites')
     hash_key = models.CharField(max_length=32, null=False, blank=False)
     
     def __str__(self):
@@ -34,5 +37,5 @@ class Invite(models.Model):
 
     def save(self, *args, **kwargs):
         self.hash_key = hashlib.md5("{} {}".format(self.date_created, 
-                                               self.discussion_group.name)).hexdigest()
+                                               self.discussion_group.name).encode('utf-8')).hexdigest()
         super(Invite, self).save(*args, **kwargs)

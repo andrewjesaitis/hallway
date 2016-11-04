@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xs-12">
+    <h2>Join the conversation!</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8 col-sm-12 well">
+    Invite people to join the conversation! Just share the link:
+    <a href="#">{{hash_key}}</a> 
+  </div>
+</div>
+{% endblock content %}
