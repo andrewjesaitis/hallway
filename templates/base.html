@@ -13,6 +13,18 @@
   </head>
   <body {% if not user.is_authenticated %}class="bg-image"{% endif %}>
     {% if user.is_authenticated %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="alert alert-dismissible {{message.tags}}" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{message}}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">

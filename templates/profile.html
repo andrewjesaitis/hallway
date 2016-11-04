@@ -4,40 +4,67 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-xs-12">
-    <h2>Profile Details</h2>
-  </div>
-</div>
-<div class="row">
-<div class="col-md-8 col-sm-12 well">
-  <div class="row">
-  <div class="col-sm-3 text-center">
+  <div class="col-md-6 col-md-offset-3 col-xs-12">
     <div class="row">
       <div class="col-xs-12">
-        {% gravatar user.email 150 %}
+        <h2>Profile Details</h2>
       </div>
     </div>
-    <div class="col-xs-12">
-      No photo? <a href="https://en.gravatar.com">Get a gravatar!</a>
-    </div>
-  </div>
-  <div class="col-sm-9">
     <div class="row">
-      <form method="post">
-        {% csrf_token %}
-        <div class="col-sm-6">
-          <h5>Basic Info</h5>
-          {% crispy form form.helper %}
+      <div class="col-xs-12 well">
+        <div class="row">
+          <div class="col-sm-3 text-center">
+            <div class="row">
+              <div class="col-xs-12">
+                {% gravatar user.email 150 %}
+              </div>
+            </div>
+            <div class="col-xs-12">
+              No photo? <a href="https://en.gravatar.com">Get a gravatar!</a>
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="row">
+              <form method="post">
+                {% csrf_token %}
+                <div class="col-sm-6">
+                  <h5>Basic Info</h5>
+                  {% crispy form form.helper %}
+                </div>
+                <div class="col-sm-6">
+                  <h5>Social Accounts</h5>
+                  {% crispy profile_form profile_form.helper %}
+                </div>
+                <div class="col-sm-6">
+                  <h5>Memberships</h5>
+                  <ul>
+                    {% for g in groups %}
+                    <li> {{ g }}</li>
+                    {% empty %}
+                    <li>Not part of any groups...yet!</li>
+                    {% endfor %}
+                  </ul>
+                  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#codeModal">Join group with code</button>
+                  <a href="{% url 'groups' %}" class="btn btn-default">Manage Groups</a>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary pull-right" value="Save">
+            </form>
+          </div>
         </div>
-        <div class="col-sm-6">
-          <h5>Social Accounts</h5>
-          {% crispy profile_form profile_form.helper %}
-        </div>
+      </div>
     </div>
-    <input type="submit" class="btn btn-primary pull-right" value="Save">
-    </form>
+    <div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Join Group</h4>
+          </div>
+          {% crispy code_form code_form.helper %}
+        </div>
+      </div>
+    </div>
   </div>
-  </div>
-</div>
 </div>
 {% endblock content %}

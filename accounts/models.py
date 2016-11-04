@@ -1,4 +1,6 @@
-import hashlib
+import random
+import string
+
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -19,23 +21,15 @@ class DiscussionGroup(models.Model):
     created_by = models.ForeignKey(User, 
                                    null=False, 
                                    related_name='created_by')
-
+    code = models.CharField(max_length=8, null=False, blank=False)
+    users = models.ManyToManyField(
+        User,
+        related_name="discussion_groups", 
+        related_query_name="discussion_group")
+    
     def __str__(self):
         return "{}".format(self.name)
 
-class Invite(models.Model):
-    email = models.EmailField(validators=[EmailValidator], null=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    associated_user = models.ForeignKey(User, 
-                                        null=True, related_name='invites')
-    discussion_group = models.ForeignKey(DiscussionGroup, 
-                                         null=False, related_name='invites')
-    hash_key = models.CharField(max_length=32, null=False, blank=False)
-    
-    def __str__(self):
-        return "{}".format(self.email)
-
     def save(self, *args, **kwargs):
-        self.hash_key = hashlib.md5("{} {}".format(self.date_created, 
-                                               self.discussion_group.name).encode('utf-8')).hexdigest()
-        super(Invite, self).save(*args, **kwargs)
+        self.code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(8))
+        super(DiscussionGroup, self).save(*args, **kwargs)

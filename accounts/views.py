@@ -7,13 +7,14 @@ from django.urls import reverse
 from django.views.generic.edit import UpdateView, FormView
 
 from accounts.models import Profile
-from accounts.forms import UserForm, ProfileForm, InviteForm, DiscussionGroupForm
+from accounts.forms import UserForm, ProfileForm, CodeForm, DiscussionGroupForm
 
 
 class UpdateProfileView(UpdateView):
     model = User
     form_class = UserForm
     profile_form_class = ProfileForm
+    code_form_class = CodeForm
     template_name = 'profile.html'
 
     def get_object(self):
@@ -29,6 +30,9 @@ class UpdateProfileView(UpdateView):
         if 'profile_form' not in context:
             current_profile, created = Profile.objects.get_or_create(user=self.request.user)
             context['profile_form'] = self.profile_form_class(self.request.GET, instance=current_profile)
+        if 'code_form' not in context:
+            context['code_form'] = self.code_form_class(self.request.GET, request=self.request)
+        context['groups'] = self.request.user.discussion_groups.all()
         return context
 
     def get(self, request, *args, **kwargs):
@@ -36,15 +40,31 @@ class UpdateProfileView(UpdateView):
         form = self.form_class(instance=request.user)
         current_profile, created = Profile.objects.get_or_create(user=request.user)
         profile_form = self.profile_form_class(instance=current_profile)
+        code_form = self.code_form_class(request=self.request)
         return self.render_to_response(self.get_context_data(
-            object=self.object, form=form, profile_form=profile_form))
+            object=self.object, form=form, profile_form=profile_form, code_form=code_form))
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(request.POST, instance=request.user)
+        form = self.form_class(instance=request.user)
         current_profile, created = Profile.objects.get_or_create(user=request.user)
-        profile_form = self.profile_form_class(request.POST, instance=current_profile)
+        profile_form = self.profile_form_class(instance=current_profile)
+        code_form = self.code_form_class(request.POST, request=self.request)
 
+        # first check if we are submitting a code
+        if 'submit_code' in request.POST:
+            if code_form.is_valid():
+                code_form.process_code(user=request.user)
+                messages.success(self.request, "Group code accepted")
+            else:
+                messages.error(self.request, "Group code was invalid")
+            code_form = self.code_form_class(request=self.request)
+            return self.render_to_response(
+              self.get_context_data(object=object,
+                  form=form, profile_form=profile_form, code_form=code_form
+              ))
+
+        # nope, submit was at the profile level
         if form.is_valid() and profile_form.is_valid():
             userdata = form.save(commit=False)
             # used to set the password, but no longer necesarry
@@ -56,77 +76,45 @@ class UpdateProfileView(UpdateView):
             return HttpResponseRedirect(self.get_success_url())
         else:
             return self.render_to_response(
-              self.get_context_data(form=form, profile_form=profile_form))
+              self.get_context_data(object=object,
+                  form=form, profile_form=profile_form, code_form=code_form
+              ))
 
     def get_success_url(self):
         return reverse('profile')
 
 
-class InviteView(FormView):
-    template_name = 'invite.html'
-    form_class = InviteForm
-    discussion_group_form_class = DiscussionGroupForm
-    success_url = '/invite-created/'
+class GroupView(FormView):
+    template_name = 'group.html'
+    form_class =  DiscussionGroupForm
 
     def get_form_kwargs(self):
-        kwargs = super(InviteView, self).get_form_kwargs()
+        kwargs = super(GroupView, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
 
-    def get_context_data(self, **kwargs):
-        context = super(InviteView, self).get_context_data(**kwargs)
+    def get_context_data(self, *args, **kwargs):
+        context = super(GroupView, self).get_context_data(**kwargs)
+        if 'user' in context:
+            User = context['user']
+            context['groups'] = User.discussion_groups.all()
         if 'form' not in context:
-            context['form'] = self.form_class(self.request.GET)
-        if 'discussion_group_form' not in context:
-            context['discussion_group_form'] = self.discussion_group_form_class()
+            context['form'] = self.form_class(request=self.request)
         return context
 
-    def get(self, request, *args, **kwargs):
-        super(InviteView, self).get(request, *args, **kwargs)
-        form = self.form_class(request=request)
-        discussion_group_form = self.discussion_group_form_class()
+    def get(self, *args, **kwargs):
+        super(GroupView, self).get(*args, **kwargs)
+        form = self.form_class(request=self.request)
         return self.render_to_response(self.get_context_data(
-            form=form, discussion_group_form=discussion_group_form))
+            user=self.request.user, form=form))
 
-    def post(self, request, *args, **kwargs):
-        processing_dg = 'submit_discussion_group' in request.POST
-        processing_invite = 'submit_invite' in request.POST
+    def post(self, *args, **kwargs):
+        form = self.form_class(self.request.POST, request=self.request)
+        if form.is_valid():
+            group_name = form.save()
+            messages.success(self.request, "{} created".format(group_name))
+        else:
+            messages.error(self.request, "Could not create group")
+        return self.render_to_response(
+            self.get_context_data(user=self.request.user, form=form))
 
-        if processing_dg:
-            discussion_group_form = self.discussion_group_form_class(request.POST)
-            if discussion_group_form.is_valid():
-                discussion_group = discussion_group_form.save(commit=False)
-                discussion_group.created_by = request.user
-                discussion_group.save()
-                messages.success(self.request, "Discussion Group Created")
-                return self.render_to_response(
-                    self.get_context_data(
-                        form = self.form_class(request=request),
-                        discussion_group_form = self.discussion_group_form_class()))
-            else:
-                return self.render_to_response(
-                    self.get_context_data(
-                        form = self.form_class(request=request),
-                        discussion_group_form = discussion_group_form))
-
-        if processing_invite:
-            form = self.form_class(request.POST, request=request)
-            if form.is_valid():
-                hash_key = form.save()
-                messages.success(self.request, "Invite created")
-                messages.success(self.request, hash_key, extra_tags='hash_key')
-                return redirect('invite-success')
-            else:
-                return self.render_to_response(
-                    self.get_context_data(
-                        form=form,
-                        discussion_group_form=self.discussion_group_form_class()))
-
-
-def invite_success(request):
-    messages = get_messages(request)
-    hash_key = None
-    for msg in messages:
-        if 'hash_key' in msg.tags:
-            hash_key = msg.message
-    return render(request, 'success.html', {'hash_key': hash_key})

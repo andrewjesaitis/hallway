@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
@@ -7,7 +8,7 @@ from crispy_forms.bootstrap import FieldWithButtons
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Button, ButtonHolder, Submit, Div
 
-from .models import Profile, DiscussionGroup, Invite
+from .models import Profile, DiscussionGroup
 
 # If you don't do this you cannot use Bootstrap CSS
 class LoginForm(AuthenticationForm):
@@ -35,12 +36,11 @@ class ProfileForm(ModelForm):
         super(ProfileForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
 
-class DiscussionGroupForm(ModelForm):
-    class Meta:
-        model = DiscussionGroup
-        fields = ('name',)
+class DiscussionGroupForm(forms.Form):
+    name = forms.CharField(label="Name")
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super(DiscussionGroupForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
@@ -50,39 +50,34 @@ class DiscussionGroupForm(ModelForm):
                     Button('cancel', 'Cancel', css_class='btn btn-default', data_dismiss='modal'),
                     Submit('submit_discussion_group', 'Create', css_class='btn btn-primary')
                 ), css_class='modal-footer'))
-                
 
-class InviteForm(forms.Form):
-    discussion_group = forms.ModelChoiceField(DiscussionGroup.objects.none())
-    emails = forms.CharField(label="Emails (comma separated)", widget=forms.Textarea)
+    def save(self, *args, **kwargs):
+        dg = DiscussionGroup(
+            name=self.cleaned_data['name'],
+            created_by=self.request.user)
+        dg.save()
+        dg.users.add(self.request.user)
+        return dg.name
+                
+class CodeForm(forms.Form):
+    code = forms.CharField(label="Invite Code", max_length=8)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
-        super(InviteForm, self).__init__(*args, **kwargs)
-        self.fields['discussion_group'].queryset = DiscussionGroup.objects.filter(created_by=self.request.user)
+        super(CodeForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Fieldset(
-                None,
-                FieldWithButtons('discussion_group',
-                                 Button(
-                                     'add_discussion_group', 
-                                     '+', 
-                                     data_toggle='modal',
-                                     data_target='#discussionGroupModal')),
-                'emails',
-                ButtonHolder(
-                    Submit('submit_invite', 'Create', css_class='button white')
-                )
-            )
-        )
-    
-    def save(self, *args, **kwargs):
-        emails = [email.strip() for email in self.cleaned_data['emails'].split(',')]
-        dg = self.cleaned_data['discussion_group']
-        blank_invite = Invite(discussion_group=dg)
-        blank_invite.save()
-        for email in emails:
-            invite = Invite(email=email, discussion_group=dg)
-            invite.save()
-        return blank_invite.hash_key
+            None,
+            Div('code', css_class='modal-body'),
+            Div(ButtonHolder(
+                    Button('cancel', 'Cancel', css_class='btn btn-default', data_dismiss='modal'),
+                    Submit('submit_code', 'Submit', css_class='btn btn-primary')
+                ), css_class='modal-footer'))
+
+    def process_code(self, *args, **kwargs):
+        try:
+            group = DiscussionGroup.objects.get(code=self.cleaned_data['code'])
+            group.users.add(self.request.user)
+            messages.success(self.request, "Added to {}".format(group.name))
+        except DiscussionGroup.DoesNotExist:
+            messages.error(self.request, "No group with that code exists")
