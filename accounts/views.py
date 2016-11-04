@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic.edit import UpdateView, FormView
 
-from accounts.models import Profile
+from accounts.models import Profile, DiscussionGroup
 from accounts.forms import UserForm, ProfileForm, CodeForm, DiscussionGroupForm
 
 
@@ -118,3 +118,13 @@ class GroupView(FormView):
         return self.render_to_response(
             self.get_context_data(user=self.request.user, form=form))
 
+def delete_group(request, pk):
+    import ipdb; ipdb.set_trace()
+    try:
+        group = DiscussionGroup.objects.get(id=pk, created_by=request.user)
+        group.delete()
+        messages.success(request, "{} deleted".format(group.name))
+    except:
+        messages.error(request, "Could not delete group")
+    return redirect('groups')
+    

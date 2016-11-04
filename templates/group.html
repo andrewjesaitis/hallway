@@ -19,7 +19,7 @@
                 {% for g in groups %}
                 <tr>
                   <td>{{g.name}}</td><td>{{g.code}}</td>
-                  <td><a href="delete/{{g.pk}}/" class="btn btn-link" {% if g.created_by != user %}disabled="disabled"{% endif %}> <i class="material-icons">delete</i></a></td>
+                  <td><a href="{% url 'delete-group' pk=g.pk %}" class="btn btn-link" {% if g.created_by != user %}disabled="disabled"{% endif %}> <i class="material-icons">delete</i></a></td>
                 </tr>
                 {% endfor %}
               </tbody>
