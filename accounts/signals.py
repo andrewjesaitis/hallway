@@ -1,6 +1,6 @@
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 from allauth.socialaccount.signals import social_account_added
-from allauth.account.signals import user_signed_up
+from allauth.account.signals import user_signed_up, user_logged_in
 
 from .models import Profile
 
@@ -20,4 +20,3 @@ def on_social_account_added(sender, **kwargs):
         profile.google_plus_url = sl.account.get_profile_url()
 
     profile.save()
-

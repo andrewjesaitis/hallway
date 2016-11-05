@@ -46,9 +46,11 @@
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="/accounts/profile">Profile</a></li>
-                <li><a href="#">Conversations</a></li>
+                {% for c in conversations %}
+                <li><a href="#">{{c.subject}}</a></li>
+                {% endfor %}
                 <li class="divider"></li>
+                <li><a href="/accounts/profile">Profile</a></li>
                 <li><a href="/accounts/logout">Logout</a></li>
               </ul>
             </li>

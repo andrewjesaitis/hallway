@@ -5,6 +5,9 @@ import string
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import EmailValidator
+from django.dispatch import Signal
+
+discussion_group_created = Signal()
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -33,3 +36,4 @@ class DiscussionGroup(models.Model):
     def save(self, *args, **kwargs):
         self.code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(8))
         super(DiscussionGroup, self).save(*args, **kwargs)
+        discussion_group_created.send(sender=self)

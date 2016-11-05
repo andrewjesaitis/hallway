@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
+from accounts.models import DiscussionGroup
 
 
 class Conversation(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
-    subject = models.CharField(max_length=120)    
+    subject = models.CharField(max_length=120)
+    discussion_group = models.OneToOneField(DiscussionGroup, on_delete=models.CASCADE)
 
     def __unicode__(self):
         return "{}".format(self.subject)

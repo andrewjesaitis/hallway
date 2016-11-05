@@ -119,7 +119,6 @@ class GroupView(FormView):
             self.get_context_data(user=self.request.user, form=form))
 
 def delete_group(request, pk):
-    import ipdb; ipdb.set_trace()
     try:
         group = DiscussionGroup.objects.get(id=pk, created_by=request.user)
         group.delete()
