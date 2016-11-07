@@ -9,7 +9,8 @@
     <title>Hallway</title>
     <!-- Core CSS - Include with every page -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
+    {% block header %}
+    {% endblock header %}
   </head>
   <body {% if not user.is_authenticated %}class="bg-image"{% endif %}>
     {% if user.is_authenticated %}
@@ -46,8 +47,8 @@
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                {% for c in conversations %}
-                <li><a href="#">{{c.subject}}</a></li>
+                {% for d in discussion_groups %}
+                <li><a href="{% url 'discussion-group-view' d.id %}">{{d.name}}</a></li>
                 {% endfor %}
                 <li class="divider"></li>
                 <li><a href="/accounts/profile">Profile</a></li>

@@ -88,7 +88,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'conversations.context_processors.add_conversations',
+                'accounts.context_processors.user_discussion_groups',
             ],
         },
     },

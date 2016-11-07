@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
     url(r'^api/', include('api.urls')),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^discussion_group/', include('conversations.urls')), 
 ]
 
 if settings.DEBUG:

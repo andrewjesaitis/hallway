@@ -2,6 +2,7 @@ import Immutable from 'immutable';
 
 import { getConversations, uploadVideo } from '../utils/api';
 
+const UPDATE_DISCUSSION_GROUP = 'UPDATE_DISCUSSION_GROUP';
 const FETCHING_CONVERSATIONS = 'FETCHING_CONVERSATIONS';
 const FETCHING_CONVERSATIONS_SUCCESS = 'FETCHING_CONVERSATIONS_SUCCESS';
 const FETCHING_CONVERSATIONS_ERROR = 'FETCHING_CONVERSATIONS_ERROR';
@@ -10,6 +11,13 @@ const POST_MESSAGE_SUCCESS = 'POST_MESSAGE_SUCCESS';
 const POST_MESSAGE_ERROR = 'POST_MESSAGE_ERROR';
 
 // Actions
+function updateDiscussionGroup(discussionGroupId) {
+  return {
+    type: UPDATE_DISCUSSION_GROUP,
+    discussionGroupId,
+  };
+}
+
 function postMessage() {
   return {
     type: POST_MESSAGE,
@@ -58,10 +66,11 @@ function fetchingConversationsError(error) {
   };
 }
 
-function fetchConversations() {
-  return dispatch => {
+function fetchConversationsForDiscussionGroup(discussionGroupId) {
+  return (dispatch, getState) => {
+    dispatch(updateDiscussionGroup(discussionGroupId));
     dispatch(requestConversations());
-    return getConversations()
+    return getConversations(getState().conversations.get('discussionGroupId'))
       .then(convos => dispatch(receiveConversations(Immutable.fromJS(convos))))
       .catch(err => dispatch(fetchingConversationsError(err)));
   };
@@ -69,6 +78,7 @@ function fetchConversations() {
 
 function addMessage(subject, conversationId, blob) {
   return (dispatch, getState) => {
+    const discussionGroupId = getState().conversations.get('discussionGroupId');
     dispatch(postMessage());
     let conversation;
     if (conversationId) {
@@ -77,7 +87,7 @@ function addMessage(subject, conversationId, blob) {
     } else {
       conversation = null;
     }
-    return uploadVideo(blob, subject, conversation)
+    return uploadVideo(blob, subject, conversation, discussionGroupId)
       .then(convo => {
         dispatch(messagePosted(Immutable.fromJS(convo)));
       })
@@ -91,6 +101,7 @@ const initialConversationState = Immutable.Map({
   isFetching: false,
   isPosting: false,
   lastUpdated: 0,
+  discussionGroupId: -1,
   conversations: Immutable.List(),
   error: Immutable.Map(),
 });
@@ -108,6 +119,10 @@ function convoComparator(c1, c2) {
 
 function conversations(state = initialConversationState, action) {
   switch (action.type) {
+    case UPDATE_DISCUSSION_GROUP:
+      return state.merge({
+        discussionGroupId: action.discussionGroupId,
+      });
     case FETCHING_CONVERSATIONS:
       return state.merge({
         isFetching: action.isFetching,
@@ -152,4 +167,4 @@ function conversations(state = initialConversationState, action) {
   }
 }
 
-export { conversations, fetchConversations, addMessage };
+export { conversations, fetchConversationsForDiscussionGroup, addMessage };

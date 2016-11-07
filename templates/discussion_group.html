@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block header%}
+<script>
+  django_discussion_group_id = {{pk}} {# global discussion_group id #}
+</script>
+{% endblock header%}
+
+{% block content %}
+<div id="react-app"></div>
+
+{% endblock content %}

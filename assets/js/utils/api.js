@@ -28,9 +28,10 @@ function uploadFile(blob, { awsInfo, s3Url }) {
     });
 }
 
-function createConversation(subject) {
+function createConversation(subject, discussionGroupId) {
   const postData = {
     subject,
+    discussion_group: discussionGroupId,
   };
   const config = {
     headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
@@ -65,14 +66,13 @@ function createMessage(conversationId, s3Url) {
    });
 }
 
-export function uploadVideo(blob, subject, conversation) {
+export function uploadVideo(blob, subject, conversation, discussionGroupId) {
   // all I want for christmas is async/await !!
   const s3Sign = getSignedRequest(blob);
   const s3Upload = s3Sign.then(res => uploadFile(blob, res.data));
   const convo = s3Upload.then(() => { // we only want to create a convo if upload succeeds
-    console.log(conversation);
     if (conversation === null) {
-      return createConversation(subject);
+      return createConversation(subject, discussionGroupId);
     }
     conversation.last_updated = new Date().getTime();
     return Promise.resolve(conversation);
@@ -91,9 +91,10 @@ export function uploadVideo(blob, subject, conversation) {
                 });
 }
 
-export function getConversations() {
+export function getConversations(discussionGroupId) {
   const config = {
     headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+    params: { discussion_group: discussionGroupId },
   };
   return axios.get(
     '/api/v1/conversations/',

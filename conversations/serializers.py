@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Conversation, Message
+from accounts.models import DiscussionGroup
 
 class UnixEpochDateField(serializers.DateTimeField):
     def to_representation(self, value):
@@ -35,6 +36,8 @@ class ConversationSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
     date_created = UnixEpochDateField(read_only=True)
     last_updated = UnixEpochDateField(read_only=True)
+    discussion_group = serializers.PrimaryKeyRelatedField(
+        queryset=DiscussionGroup.objects.all(), allow_null=False, required=True)
     class Meta:
         model = Conversation
-        fields = ('pk', 'date_created', 'last_updated', 'subject', 'messages')
+        fields = ('pk', 'date_created', 'discussion_group', 'last_updated', 'subject', 'messages')

@@ -6,11 +6,11 @@ import Immutable from 'immutable';
 import ConversationList from '../components/ConversationList';
 import PlayerContainer from '../containers/PlayerContainer';
 import ActionButtonContainer from '../containers/ActionButtonContainer';
-import { fetchConversations } from '../redux/conversations';
+import { fetchConversationsForDiscussionGroup } from '../redux/conversations';
 
 class ConversationListContainer extends Component {
   componentWillMount() {
-    this.props.fetchConversations();
+    this.props.fetchConversationsForDiscussionGroup(django_discussion_group_id);
   }
   render() {
     return (
@@ -24,12 +24,12 @@ class ConversationListContainer extends Component {
 }
 
 ConversationListContainer.propTypes = {
-  fetchConversations: PropTypes.func.isRequired,
+  fetchConversationsForDiscussionGroup: PropTypes.func.isRequired,
   conversations: PropTypes.instanceOf(Immutable.List).isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchConversations }, dispatch);
+  return bindActionCreators({ fetchConversationsForDiscussionGroup }, dispatch);
 }
 
 function mapStateToProps({ conversations }) {
