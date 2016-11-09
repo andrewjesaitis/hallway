@@ -94,3 +94,5 @@ db.sqlite3
 assets/bundles/
 node_modules/
 webpack-stats.json
+
+secrets.env
