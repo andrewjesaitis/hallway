@@ -13,7 +13,7 @@ module.exports = {
   context: __dirname,
 
   entry: [
-    'webpack-dev-server/client?http://172.18.0.3:3000',
+    'webpack-dev-server/client?http://0.0.0.0:3000',
     'webpack/hot/only-dev-server',
     path.resolve(PATHS.app, 'index.jsx'),
   ],
@@ -21,7 +21,7 @@ module.exports = {
   output: {
     path: PATHS.dist,
     filename: '[name]-[hash].js',
-    publicPath: 'http://172.18.0.3:3000/assets/bundles/',
+    publicPath: 'http://0.0.0.0:3000/assets/bundles/',
   },
 
   plugins: [
