@@ -7,14 +7,10 @@
         netcat nodejs \
     && rm -rf /var/lib/apt/lists/*
 
- WORKDIR /tmp
- COPY package.json /tmp/
- RUN npm config set registry http://registry.npmjs.org/ && npm install
-
  RUN mkdir /code
+ ADD . /code/
  WORKDIR /code
- RUN cp -a /tmp/node_modules /usr/src/app/
- ADD requirements.txt /code/
+ RUN npm install
  RUN pip install --upgrade pip
  RUN pip install -r requirements.txt
- ADD . /code/
+

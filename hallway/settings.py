@@ -35,7 +35,7 @@ SECRET_KEY = 'o-x%=2^rq3ruwu1d^@1=b6hz2v(z39li!2)#ubf-m8f!jx^cl!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -167,16 +167,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
 
 # Webpack
+webpack_stats_file = 'webpack-stats-prod.json'
+# webpack_stats_file = 'webpack-stats.json'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'bundles/',
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'STATS_FILE': os.path.join(BASE_DIR, webpack_stats_file),
     }
 }

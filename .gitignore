@@ -93,6 +93,8 @@ ENV/
 db.sqlite3
 assets/bundles/
 node_modules/
+static/
 webpack-stats.json
+webpack-stats-prod.json
 
 secrets.env
