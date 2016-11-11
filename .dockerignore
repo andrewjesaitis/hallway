@@ -2,5 +2,7 @@
 .gitignore
 .editorconfig
 node_modules
+secrets.env
 *.log
 *.md
+dbdata/

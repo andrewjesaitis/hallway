@@ -98,3 +98,7 @@ webpack-stats.json
 webpack-stats-prod.json
 
 secrets.env
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
