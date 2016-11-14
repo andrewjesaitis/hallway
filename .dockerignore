@@ -6,3 +6,4 @@ secrets.env
 *.log
 *.md
 dbdata/
+.dockercfg

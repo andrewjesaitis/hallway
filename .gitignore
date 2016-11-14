@@ -102,3 +102,5 @@ secrets.env
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+.dockercfg
+*.zip

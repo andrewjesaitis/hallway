@@ -2,7 +2,7 @@
 
 cd /code/
 
-WSGI_PATH=/code/hallway/wsgi.py
+WSGI_PATH=/var/hallway/hallway/wsgi.py
 
 python manage.py migrate
 

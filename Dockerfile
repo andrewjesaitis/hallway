@@ -14,17 +14,17 @@
         postgresql-client python-psycopg2 libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
- RUN mkdir /var/app
- ADD accounts /var/app
- ADD api /var/app
- ADD conversations /var/app
- ADD hallway /var/app
- ADD manage.py /var/app
- ADD requirements.txt /var/app
- ADD static /var/app
- ADD templates /var/app
+ RUN mkdir /var/hallway
+ ADD accounts /var/hallway
+ ADD api /var/hallway
+ ADD conversations /var/hallway
+ ADD hallway /var/hallway
+ ADD manage.py /var/hallway
+ ADD requirements.txt /var/hallway
+ ADD static /var/hallway
+ ADD templates /var/hallway
  ADD uwsgi-start.sh /
- WORKDIR /var/app
+ WORKDIR /var/hallway
 
  RUN pip install --upgrade pip
  RUN pip install -r requirements.txt
@@ -35,8 +35,8 @@
  RUN        mkdir /var/log/uwsgi
  RUN        chown -R uwsgi:uwsgi /var/log/uwsgi
  RUN        chmod -R u+rX /var/log/uwsgi
- RUN        chown -R uwsgi:uwsgi /var/app
- RUN        chmod a+rw /var/app
+ RUN        chown -R uwsgi:uwsgi /var/hallway
+ RUN        chmod a+rw /var/hallway
 
  EXPOSE     8080
 
