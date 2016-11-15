@@ -1,10 +1,12 @@
 from hallway.settings import *
 
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['andrewjesaitis.com']
+ADMINS = [('Hallway Admin', 'hallwayapp@gmail.com')]
+
+ALLOWED_HOSTS = ['hallway.andrewjesaitis.com']
 
 DATABASES = {
     'default': {
@@ -27,7 +29,7 @@ EMAIL_PORT = 587
 
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/',
+        'BUNDLE_DIR_NAME': '',
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats-prod.json'),
     }
 }

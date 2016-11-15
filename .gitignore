@@ -102,5 +102,7 @@ secrets.env
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+.ebextensions/env.config
 .dockercfg
 *.zip
+*.ipynb

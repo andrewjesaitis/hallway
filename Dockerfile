@@ -15,14 +15,15 @@
     && rm -rf /var/lib/apt/lists/*
 
  RUN mkdir /var/hallway
- ADD accounts /var/hallway
- ADD api /var/hallway
- ADD conversations /var/hallway
- ADD hallway /var/hallway
+ ADD accounts /var/hallway/accounts
+ ADD api /var/hallway/api
+ ADD conversations /var/hallway/conversations
+ ADD hallway /var/hallway/hallway
  ADD manage.py /var/hallway
+ ADD webpack-stats-prod.json /var/hallway
  ADD requirements.txt /var/hallway
- ADD static /var/hallway
- ADD templates /var/hallway
+ ADD static /var/hallway/static
+ ADD templates /var/hallway/templates
  ADD uwsgi-start.sh /
  WORKDIR /var/hallway
 
