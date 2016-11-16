@@ -18,6 +18,11 @@ class Profile(models.Model):
     def __str__(self):
         return "{}'s Profile".format(self.user.username)
 
+    def save(self, *args, **kwargs):
+        super(Profile, self).save(*args, **kwargs)
+        cs6460_dg, created = DiscussionGroup.objects.get_or_create(name="CS6460", defaults={'created_by': self.user})
+        cs6460_dg.users.add(self.user)
+
 class DiscussionGroup(models.Model):
     name = models.CharField(max_length=100)
     date_created = models.DateTimeField(auto_now_add=True)
