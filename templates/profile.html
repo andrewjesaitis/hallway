@@ -38,8 +38,8 @@
                 <div class="col-sm-6">
                   <h5>Memberships</h5>
                   <ul>
-                    {% for g in groups %}
-                    <li> {{ g }}</li>
+                    {% for d in discussion_groups %}
+                    <li><a href="{% url 'discussion-group-view' d.id %}">{{d.name}}</a></li>
                     {% empty %}
                     <li>Not part of any groups...yet!</li>
                     {% endfor %}

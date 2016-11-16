@@ -32,7 +32,7 @@ class UpdateProfileView(UpdateView):
             context['profile_form'] = self.profile_form_class(self.request.GET, instance=current_profile)
         if 'code_form' not in context:
             context['code_form'] = self.code_form_class(self.request.GET, request=self.request)
-        context['groups'] = self.request.user.discussion_groups.all()
+        context['discussion_groups'] = self.request.user.discussion_groups.all()
         return context
 
     def get(self, request, *args, **kwargs):
