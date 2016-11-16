@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load render_bundle from webpack_loader %}
 
 {% block header%}
 <script>
@@ -10,3 +11,7 @@
 <div id="react-app"></div>
 
 {% endblock content %}
+
+{% block javascript %}
+{% render_bundle 'main' 'js' %}
+{% endblock javascript%}

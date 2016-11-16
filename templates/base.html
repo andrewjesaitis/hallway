@@ -9,6 +9,7 @@
     <title>Hallway</title>
     <!-- Core CSS - Include with every page -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% render_bundle 'main' 'css' %}
     {% block header %}
     {% endblock header %}
   </head>
@@ -64,7 +65,6 @@
     <div class="container-fluid">
     {% block content %}
     {% endblock %}
-    {% render_bundle 'main' %}
     </div>
 
     <!-- Core Scripts - Include with every page -->
