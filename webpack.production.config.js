@@ -10,7 +10,7 @@ const PATHS = {
 };
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'cheap-source-map',
   context: __dirname,
 
   entry: [
@@ -27,10 +27,15 @@ module.exports = {
       comments: false,
       filename: './webpack-stats-prod.json',
     }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
-      }
+      },
+      comments: false,
+      sourcemap: false
     }),
     new ExtractTextPlugin('[name].css'),
   ],

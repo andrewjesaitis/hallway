@@ -5,38 +5,39 @@ import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import Immutable from 'immutable';
-
 import { ui } from './redux/ui';
 import { conversations } from './redux/conversations';
 import ConversationListContainer from './containers/ConversationListContainer';
-
 require('../css/main.less');
 
-const loggerMiddleware = createLogger({
-  stateTransformer: (state) => {
-    const newState = {};
+let middleware = [thunkMiddleware];
 
-    for (let i of Object.keys(state)) {
-      if (Immutable.Iterable.isIterable(state[i])) {
-        newState[i] = state[i].toJS();
-      } else {
-        newState[i] = state[i];
-      }
-    };
+//Don't apply redux-logger in production
+if (process.env.NODE_ENV !== 'production') {
+    const loggerMiddleware = createLogger({
+        stateTransformer: (state) => {
+            const newState = {};
 
-    return newState;
-  },
-});
+            for (let i of Object.keys(state)) {
+                if (Immutable.Iterable.isIterable(state[i])) {
+                    newState[i] = state[i].toJS();
+                } else {
+                    newState[i] = state[i];
+                }
+            };
+
+            return newState;
+        },
+    });
+    middleware = [...middleware, loggerMiddleware]
+}
 
 const store = createStore(
   combineReducers({
     ui,
     conversations,
   }),
-  applyMiddleware(
-    thunkMiddleware,
-    loggerMiddleware
-  )
+  applyMiddleware(...middleware)
 );
 
 ReactDOM.render(
