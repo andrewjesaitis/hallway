@@ -10,7 +10,7 @@ from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 
 class ConversationViewSet(viewsets.ModelViewSet):
-    queryset = Conversation.objects.all()
+    queryset = Conversation.objects.filter(messages__isnull=False)
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
     filter_fields = ('discussion_group',)
