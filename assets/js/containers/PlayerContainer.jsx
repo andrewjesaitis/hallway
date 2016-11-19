@@ -13,22 +13,27 @@ class PlayerContainer extends Component {
     this.state = {
       curIdx: 0,
       src: '',
+      canDelete: false,
       width: 480,
       height: 360,
     };
   }
   componentWillReceiveProps(nextProps) {
-    const length = nextProps.srcs.size;
+    const length = nextProps.messages.size;
     console.log(nextProps);
     this.setState({
-      src: length > 0 ? nextProps.srcs.get(this.state.curIdx) : '',
+      src: length > 0 ? nextProps.messages.getIn([this.state.curIdx, 'url']) : '',
+      canDelete: length > 0
+                 ? nextProps.messages.getIn([this.state.curIdx, 'can_delete'])
+                 : false,
     });
   }
   playNext() {
     const nextVideo = this.state.curIdx + 1;
-    if (nextVideo < this.props.srcs.size) {
+    if (nextVideo < this.props.messages.size) {
       this.setState({
-        src: this.props.srcs.get(nextVideo),
+        src: this.props.messages.getIn([nextVideo, 'url']),
+        canDelete: this.props.messages.getIn([nextVideo, 'can_delete']),
         curIdx: nextVideo,
       });
     }
@@ -37,7 +42,8 @@ class PlayerContainer extends Component {
     const previousVideo = this.state.curIdx - 1;
     if (previousVideo >= 0) {
       this.setState({
-        src: this.props.srcs.get(previousVideo),
+        src: this.props.messages.getIn([previousVideo, 'url']),
+        canDelete: this.props.messages.getIn([previousVideo, 'can_delete']),
         curIdx: previousVideo,
       });
     }
@@ -54,7 +60,7 @@ class PlayerContainer extends Component {
     const convoIdx = this.props.convoIdx;
     const msgId = this.props.currentConversation.getIn(['messages', this.state.curIdx, 'pk']);
     const msgIdx = this.state.curIdx;
-    const shouldDeleteConvo = this.props.srcs.size === 1 
+    const shouldDeleteConvo = this.props.messages.size === 1
     this.props.removeMessage(convoId, convoIdx, msgId, msgIdx, shouldDeleteConvo);
     if(shouldDeleteConvo) {
         this.handleClose();
@@ -95,6 +101,7 @@ class PlayerContainer extends Component {
         handleNext={(e) => this.handleNext(e)}
         handleReply={(e) => this.handleReply(e)}
         handleDelete={(e) => this.handleDelete(e)}
+        canDelete={this.state.canDelete}
         src={this.state.src}
         subject={this.props.subject}
       />
@@ -103,7 +110,7 @@ class PlayerContainer extends Component {
 }
 
 PlayerContainer.propTypes = {
-  srcs: PropTypes.instanceOf(Immutable.List),
+  messages: PropTypes.instanceOf(Immutable.List),
   subject: PropTypes.string,
   conversationId: PropTypes.number,
   playerVisible: PropTypes.bool.isRequired,
@@ -114,14 +121,13 @@ PlayerContainer.propTypes = {
 
 function mapStateToProps({ ui, conversations }) {
   const convoIdx = conversations.get('conversations').findIndex(c => ui.get('conversationId') === c.get('pk'));
-  const currentConversation = convoIdx !== -1 
+  const currentConversation = convoIdx !== -1
                               ? conversations.getIn(['conversations', convoIdx])
                               : Immutable.Map()
   return {
     convoIdx,
     currentConversation,
-    srcs: currentConversation.get('messages', Immutable.List())
-                             .map(item => item.get('url')),
+    messages: currentConversation.get('messages', Immutable.List()),
     subject: currentConversation.get('subject', ''),
     conversationId: ui.get('conversationId'),
     playerVisible: ui.get('playerVisible'),
@@ -129,12 +135,8 @@ function mapStateToProps({ ui, conversations }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ displayPlayer, displayRecorder, 
+  return bindActionCreators({ displayPlayer, displayRecorder,
                               clearConversation, removeMessage }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerContainer);
-
-
-
-
