@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import Immutable from 'immutable';
 
 import { displayPlayer, displayRecorder, clearConversation } from '../redux/ui';
+import { removeMessage } from '../redux/conversations';
 import Player from '../components/Player';
 
 class PlayerContainer extends Component {
@@ -46,6 +47,19 @@ class PlayerContainer extends Component {
     this.props.displayPlayer(false);
     this.props.displayRecorder(true);
   }
+  handleDelete(e) {
+    e.preventDefault();
+    console.log("delete post");
+    const convoId = this.props.currentConversation.get('pk');
+    const convoIdx = this.props.convoIdx;
+    const msgId = this.props.currentConversation.getIn(['messages', this.state.curIdx, 'pk']);
+    const msgIdx = this.state.curIdx;
+    const shouldDeleteConvo = this.props.srcs.size === 1 
+    this.props.removeMessage(convoId, convoIdx, msgId, msgIdx, shouldDeleteConvo);
+    if(shouldDeleteConvo) {
+        this.handleClose();
+    }
+  }
   handleClose() {
     this.setState({
       curIdx: 0,
@@ -80,6 +94,7 @@ class PlayerContainer extends Component {
         handlePrevious={(e) => this.handlePrevious(e)}
         handleNext={(e) => this.handleNext(e)}
         handleReply={(e) => this.handleReply(e)}
+        handleDelete={(e) => this.handleDelete(e)}
         src={this.state.src}
         subject={this.props.subject}
       />
@@ -97,17 +112,25 @@ PlayerContainer.propTypes = {
   clearConversation: PropTypes.func.isRequired,
 };
 
-function mapStateToProps({ ui }) {
+function mapStateToProps({ ui, conversations }) {
+  const convoIdx = conversations.get('conversations').findIndex(c => ui.get('conversationId') === c.get('pk'));
+  const currentConversation = convoIdx !== -1 
+                              ? conversations.getIn(['conversations', convoIdx])
+                              : Immutable.Map()
   return {
-    srcs: ui.get('srcs'),
-    subject: ui.get('subject'),
+    convoIdx,
+    currentConversation,
+    srcs: currentConversation.get('messages', Immutable.List())
+                             .map(item => item.get('url')),
+    subject: currentConversation.get('subject', ''),
     conversationId: ui.get('conversationId'),
     playerVisible: ui.get('playerVisible'),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ displayPlayer, displayRecorder, clearConversation }, dispatch);
+  return bindActionCreators({ displayPlayer, displayRecorder, 
+                              clearConversation, removeMessage }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerContainer);

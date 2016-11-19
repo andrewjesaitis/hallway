@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, handleReply, src, subject }) {
+function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, handleReply, handleDelete, src, subject }) {
   return (
     <Modal show={show}>
       <Modal.Header>
@@ -43,6 +43,7 @@ function Player({ show, handleClose, handleEnded, handleError, handlePrevious, h
       <Modal.Footer>
         <div className="row">
           <div className="col-sm-12">
+            <Button bsStyle="danger" onClick={handleDelete}>Delete</Button>
             <Button bsStyle="primary" onClick={handleReply}>Reply</Button>
           </div>
         </div>
@@ -59,6 +60,7 @@ Player.propTypes = {
   handlePrevious: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
   handleReply: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
   src: PropTypes.string,
   subject: PropTypes.string.isRequired,
 };

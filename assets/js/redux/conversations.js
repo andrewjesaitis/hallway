@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 
-import { getConversations, uploadVideo } from '../utils/api';
+import { getConversations, uploadVideo, deleteMessageOnServer } from '../utils/api';
 
 const UPDATE_DISCUSSION_GROUP = 'UPDATE_DISCUSSION_GROUP';
 const FETCHING_CONVERSATIONS = 'FETCHING_CONVERSATIONS';
@@ -9,6 +9,10 @@ const FETCHING_CONVERSATIONS_ERROR = 'FETCHING_CONVERSATIONS_ERROR';
 const POST_MESSAGE = 'POST_MESSAGE';
 const POST_MESSAGE_SUCCESS = 'POST_MESSAGE_SUCCESS';
 const POST_MESSAGE_ERROR = 'POST_MESSAGE_ERROR';
+const DELETE_MESSAGE = 'DELETE_MESSAGE';
+const DELETE_MESSAGE_SUCCESS = 'DELETE_MESSAGE_SUCCESS';
+const DELETE_MESSAGE_ERROR = 'DELETE_MESSAGE_ERROR';
+
 
 // Actions
 function updateDiscussionGroup(discussionGroupId) {
@@ -66,6 +70,36 @@ function fetchingConversationsError(error) {
   };
 }
 
+function deleteMessage() {
+  return {
+    type: DELETE_MESSAGE,
+    isDeleting: true,
+  }
+}
+
+function deleteMessageSuccess(convoId, convoIdx, msgId, msgIdx, shouldDeleteConvo) {
+  return {
+    type: DELETE_MESSAGE_SUCCESS,
+    isDeleting: false,
+    lastUpdated: Date.now(),
+    convoId, 
+    convoIdx, 
+    msgId, 
+    msgIdx, 
+    shouldDeleteConvo
+  }
+}    
+
+function deleteMessageFailed(error) {
+  return {
+    type: DELETE_MESSAGE_ERROR,
+    isDeleting: false,
+    lastUpdated: Date.now(),
+    error
+  }
+}
+
+
 function fetchConversationsForDiscussionGroup(discussionGroupId) {
   return (dispatch, getState) => {
     dispatch(updateDiscussionGroup(discussionGroupId));
@@ -93,6 +127,15 @@ function addMessage(subject, conversationId, blob) {
       })
       .catch(err => dispatch(messageFailedToPost(err)));
   };
+}
+
+function removeMessage(convoId, convoIdx, msgId, msgIdx, shouldDeleteConvo) {
+  return (dispatch) => {
+    dispatch(deleteMessage());
+    return deleteMessageOnServer(msgId)
+       .then(() => dispatch(deleteMessageSuccess(convoId, convoIdx, msgId, msgIdx, shouldDeleteConvo)))
+       .catch(err => dispatch(deleteMessageFailed(err)));
+  }
 }
 
 // Reducer
@@ -162,9 +205,34 @@ function conversations(state = initialConversationState, action) {
         isPosting: action.isPosting,
         error: action.error,
       });
+    case DELETE_MESSAGE:
+      return state.merge({
+        isDeleting: action.isDeleting,
+        error: {}
+      })
+    case DELETE_MESSAGE_SUCCESS:
+      debugger;
+      if(action.shouldDeleteConvo) {
+        state = state.update('conversations', arr => arr.delete(action.convoIdx));
+      } else {
+        state = state.updateIn(['conversations', action.convoIdx, 'messages'], 
+                         arr => arr.delete(action.msgIdx));
+      }
+      return state.merge({
+        isDeleting: action.isDeleting,
+        lastUpdated: action.lastUpdated,
+        error: {}
+      });
+    case DELETE_MESSAGE_ERROR:
+      return state.merge({
+        isDeleting: action.isDeleting,
+        lastUpdated: action.lastUpdated,
+        error: action.error
+      });      
     default:
       return state;
   }
 }
 
-export { conversations, fetchConversationsForDiscussionGroup, addMessage };
+export { conversations, fetchConversationsForDiscussionGroup,
+         addMessage, removeMessage };

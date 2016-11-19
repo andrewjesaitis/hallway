@@ -124,3 +124,19 @@ export function getMessages(conversationId) {
     console.log(err);
   });
 }
+
+export function deleteMessageOnServer(id) {
+  const config = {
+    headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+  };
+  return axios.delete(
+    `/api/v1/messages/${id}/`,
+    config
+  ).then((res) => {
+    console.log(`Message ${id} deleted`);
+    return res;
+  }).catch((err) => {
+    console.warn(`Couldn't delete message ${id}`);
+    console.log(err);
+  });
+}

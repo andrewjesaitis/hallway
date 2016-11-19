@@ -11,8 +11,6 @@ function selectConversation(id, subject, srcs) {
   return {
     type: SELECT_CONVERSATION,
     id,
-    subject,
-    srcs
   };
 }
 
@@ -42,23 +40,17 @@ const initialUIState = Immutable.Map({
   playerVisible: false,
   recorderVisible: false,
   conversationId: null,
-  subject: '',
-  srcs: Immutable.List(),
 });
 
 function ui(state = initialUIState, action) {
   switch (action.type) {
     case SELECT_CONVERSATION:
       return state.merge({
-        subject: action.subject,
         conversationId: action.id,
-        srcs: action.srcs,
       });
     case CLEAR_CONVERSATION:
       return state.merge({
-        subject: '',
         conversationId: null,
-        srcs: Immutable.List(),
       });
     case DISPLAY_PLAYER:
       return state.merge({

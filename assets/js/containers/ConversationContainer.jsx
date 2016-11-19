@@ -9,11 +9,8 @@ import Conversation from '../components/Conversation';
 class ConversationContainer extends Component {
   handlePlay(e) {
     e.preventDefault();
-    const urls = this.props.conversation.get('messages').map(item => item.get('url'));
     this.props.displayPlayer(true);
-    this.props.selectConversation(this.props.conversation.get('pk'),
-                                  this.props.conversation.get('subject'),
-                                  urls);
+    this.props.selectConversation(this.props.conversation.get('pk'));
   }
   render() {
     return (
