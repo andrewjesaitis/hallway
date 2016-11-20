@@ -47,7 +47,6 @@ class RecorderContainer extends Component {
   }
   requestUserMedia() {
     const { width, height } = this.state;
-    console.log(width, height);
     const constraints = {
       audio: true,
       video: { width, height },
@@ -74,13 +73,19 @@ class RecorderContainer extends Component {
     }
   }
   startRecording() {
+    const { width, height } = this.state;
     this.setState({
       isRecording: true,
       muted: true,
       loop: false,
       controls: true,
-    });
-    this.state.recordVideo.startRecording();
+      src: window.URL.createObjectURL(this.state.stream),
+      recordVideo: new RecordRTC(this.state.stream, {
+                        type: 'video',
+                        video: { width, height },
+                        canvas: { width, height },
+                      }),
+    }, () => this.state.recordVideo.startRecording());
   }
   stopRecording() {
     this.setState({
