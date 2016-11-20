@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
+from django.http.response import HttpResponseForbidden
 
 
 from rest_framework import viewsets, filters, permissions
@@ -35,6 +37,15 @@ class MessageViewSet(viewsets.ModelViewSet):
         context['request'] = self.request
         return context
 
+def discussion_member(function):
+    def wrap(request, *args, **kwargs):
+        in_group = request.user.discussion_groups.filter(pk=kwargs['pk']).exists()
+        if in_group:
+            return function(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden("403 Forbidden")
+    return wrap
+
 class DiscussionGroupView(TemplateView):
     template_name = 'discussion_group.html'
 
@@ -42,4 +53,7 @@ class DiscussionGroupView(TemplateView):
         context = super(DiscussionGroupView, self).get_context_data(**kwargs)
         context['pk'] = kwargs.pop('pk', None)
         return context
-    
+
+    @method_decorator(discussion_member)
+    def dispatch(self, *args, **kwargs):
+        return super(DiscussionGroupView, self).dispatch(*args, **kwargs)
