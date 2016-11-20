@@ -149,12 +149,23 @@ const initialConversationState = Immutable.Map({
   error: Immutable.Map(),
 });
 
-function convoComparator(c1, c2) {
-  const c1msg = c1.get('last_updated');
-  const c2msg = c2.get('last_updated');
-  if (c1msg < c2msg) {
+function sortByLastUpdated(c1, c2) {
+  const d1 = c1.get('last_updated');
+  const d2 = c2.get('last_updated');
+  if (d1 < d2) {
     return 1;
-  } else if (c1msg > c2msg) {
+  } else if (d1 > d2) {
+    return -1;
+  }
+  return 0;
+}
+
+function sortByDateCreated(c1, c2) {
+  const d1 = c1.get('date_created');
+  const d2 = c2.get('date_created');
+  if (d1 < d2) {
+    return 1;
+  } else if (d1 > d2) {
     return -1;
   }
   return 0;
@@ -175,7 +186,7 @@ function conversations(state = initialConversationState, action) {
       return state.merge({
         isFetching: action.isFetching,
         lastUpdated: action.lastUpdated,
-        conversations: action.conversations.sort(convoComparator),
+        conversations: action.conversations.sort(sortByLastUpdated),
       });
     case FETCHING_CONVERSATIONS_ERROR:
       return state.merge({
@@ -188,6 +199,7 @@ function conversations(state = initialConversationState, action) {
         error: {},
       });
     case POST_MESSAGE_SUCCESS:
+      action.conversation = action.conversation.update('messages', arr => arr.sort(sortByDateCreated));
       const idx = state.get('conversations')
                        .findIndex(c => c.get('pk') === action.conversation.get('pk'));
       if (idx !== -1) {
@@ -198,7 +210,7 @@ function conversations(state = initialConversationState, action) {
       return state.merge({
         isPosting: action.isPosting,
         lastUpdated: action.lastUpdated,
-        conversations: state.get('conversations').sort(convoComparator),
+        conversations: state.get('conversations').sort(sortByLastUpdated),
       });
     case POST_MESSAGE_ERROR:
       return state.merge({
