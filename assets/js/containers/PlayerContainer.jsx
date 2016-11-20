@@ -118,6 +118,8 @@ class PlayerContainer extends Component {
         subject={this.props.subject}
         name={this.state.name}
         email={this.state.email}
+        width={this.state.width}
+        height={this.state.height}
       />
     );
   }

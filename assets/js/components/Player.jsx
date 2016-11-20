@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Gravatar from 'react-gravatar';
 import { Modal, Button } from 'react-bootstrap';
 
-function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, handleReply, handleDelete, src, canDelete, subject, email, name }) {
+function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, handleReply, handleDelete, src, canDelete, subject, email, name, width, height }) {
   return (
     <Modal show={show}>
       <Modal.Header>
@@ -24,14 +24,15 @@ function Player({ show, handleClose, handleEnded, handleError, handlePrevious, h
               <i className="material-icons md-48">keyboard_arrow_left</i>
             </a>
           </div>
-          <div className="col-sm-10 embed-responsive embed-responsive-16by9">
+          <div className="col-sm-10">
             <video
-              className="embed-responsive-item"
               autoPlay
               controls
               src={src}
               onEnded={handleEnded}
               onError={handleError}
+              width={width}
+              height={height}
             />
           </div>
           <div className="col-sm-1 nav-arrow">
@@ -78,6 +79,8 @@ Player.propTypes = {
   handleDelete: PropTypes.func.isRequired,
   src: PropTypes.string,
   subject: PropTypes.string.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 };
 
 export default Player;
