@@ -55,7 +55,6 @@ class UpdateProfileView(UpdateView):
         if 'submit_code' in request.POST:
             if code_form.is_valid():
                 code_form.process_code(user=request.user)
-                messages.success(self.request, "Group code accepted")
             else:
                 messages.error(self.request, "Group code was invalid")
             code_form = self.code_form_class(request=self.request)
