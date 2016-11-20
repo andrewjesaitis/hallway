@@ -161,11 +161,12 @@ function sortByLastUpdated(c1, c2) {
 }
 
 function sortByDateCreated(c1, c2) {
+  //note that signs are flipped compared to lastUpdated
   const d1 = c1.get('date_created');
   const d2 = c2.get('date_created');
-  if (d1 < d2) {
+  if (d1 > d2) {
     return 1;
-  } else if (d1 > d2) {
+  } else if (d1 < d2) {
     return -1;
   }
   return 0;
@@ -183,6 +184,7 @@ function conversations(state = initialConversationState, action) {
         error: {},
       });
     case FETCHING_CONVERSATIONS_SUCCESS:
+      action.conversations = action.conversations.map(c => c.update('messages', arr => arr.sort(sortByDateCreated)));
       return state.merge({
         isFetching: action.isFetching,
         lastUpdated: action.lastUpdated,
