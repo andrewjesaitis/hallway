@@ -10,7 +10,8 @@ class ConversationContainer extends Component {
   handlePlay(e) {
     e.preventDefault();
     this.props.displayPlayer(true);
-    this.props.selectConversation(this.props.conversation.get('pk'));
+    this.props.selectConversation(this.props.conversation.get('pk'),
+                                  this.props.conversation.get('subject'));
   }
   render() {
     return (

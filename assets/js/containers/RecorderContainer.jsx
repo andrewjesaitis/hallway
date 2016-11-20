@@ -23,6 +23,7 @@ class RecorderContainer extends Component {
       loop: false,
       width: 640,
       height: 360,
+      isReply: Number.isInteger(this.props.conversationId),
     };
   }
   componentWillReceiveProps(newProps) {
@@ -30,6 +31,10 @@ class RecorderContainer extends Component {
     if (this.props.recorderVisible === false && newProps.recorderVisible === true) {
       this.requestUserMedia();
     }
+    this.setState({
+      isReply: Number.isInteger(newProps.conversationId),
+      subject: newProps.subject,
+    });
   }
   isSubjectValid() {
     const length = this.state.subject.length;
@@ -105,6 +110,7 @@ class RecorderContainer extends Component {
       stream: null,
       muted: true,
       controls: false,
+      isReply: false,
     });
     this.props.clearConversation();
     this.props.displayRecorder(false);
@@ -128,6 +134,7 @@ class RecorderContainer extends Component {
         isSubjectValid={() => this.isSubjectValid()}
         onSubjectChange={(e) => this.handleSubjectChange(e)}
         subject={this.state.subject}
+        isReply={this.state.isReply}
       />
     );
   }
@@ -139,6 +146,7 @@ RecorderContainer.propTypes = {
   addMessage: PropTypes.func.isRequired,
   recorderVisible: PropTypes.bool.isRequired,
   conversationId: PropTypes.number,
+  subject: PropTypes.string.isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
@@ -149,6 +157,7 @@ function mapStateToProps({ ui }) {
   return {
     recorderVisible: ui.get('recorderVisible'),
     conversationId: ui.get('conversationId'),
+    subject: ui.get('subject'),
   };
 }
 

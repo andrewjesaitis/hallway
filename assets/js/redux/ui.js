@@ -7,10 +7,11 @@ const DISPLAY_RECORDER = 'DISPLAY_RECORDER';
 
 // Actions
 
-function selectConversation(id, subject, srcs) {
+function selectConversation(id, subject) {
   return {
     type: SELECT_CONVERSATION,
     id,
+    subject,
   };
 }
 
@@ -40,6 +41,7 @@ const initialUIState = Immutable.Map({
   playerVisible: false,
   recorderVisible: false,
   conversationId: null,
+  subject: '',
 });
 
 function ui(state = initialUIState, action) {
@@ -47,10 +49,12 @@ function ui(state = initialUIState, action) {
     case SELECT_CONVERSATION:
       return state.merge({
         conversationId: action.id,
+        subject: action.subject,
       });
     case CLEAR_CONVERSATION:
       return state.merge({
         conversationId: null,
+        subject: '',
       });
     case DISPLAY_PLAYER:
       return state.merge({

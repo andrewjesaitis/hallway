@@ -4,13 +4,16 @@ import { Modal, Button, FormGroup, FormControl, HelpBlock } from 'react-bootstra
 function Recorder({ showModal, isRecording, hasRecording, onRecord,
                     src, onClose, onPost, autoPlay, muted,
                     controls, loop, width, height, isSubjectValid,
-                    onSubjectChange, subject }) {
+                    onSubjectChange, subject, isReply }) {
   return (
     <Modal show={showModal}>
       <Modal.Header>
         <div className="row">
           <div className="col-sm-10">
-            <h4>Start a new conversation</h4>
+            {isReply
+             ? <h4>Relpying to: {subject}</h4>
+             : <h4>Start a new conversation</h4>
+            }
           </div>
           <div className="col-sm-2">
             <button type="button" className="close" aria-label="Close" onClick={onClose}>
@@ -35,19 +38,21 @@ function Recorder({ showModal, isRecording, hasRecording, onRecord,
             />
           </div>
         </div>
-        <FormGroup
-          controlId="videoSubject"
-          validationState={isSubjectValid()}
-        >
-          <FormControl
-            type="text"
-            value={subject}
-            placeholder="What are you talking about?"
-            onChange={onSubjectChange}
-          />
-          <FormControl.Feedback />
-          <HelpBlock>Subjects need to be less than 120 characters</HelpBlock>
-        </FormGroup>
+        {!isReply &&
+         <FormGroup
+           controlId="videoSubject"
+           validationState={isSubjectValid()}
+         >
+           <FormControl
+             type="text"
+             value={subject}
+             placeholder="What are you talking about?"
+             onChange={onSubjectChange}
+           />
+           <FormControl.Feedback />
+           <HelpBlock>Subjects need to be less than 120 characters</HelpBlock>
+         </FormGroup>
+         }
       </Modal.Body>
       <Modal.Footer>
         <Button className="btn-primary" disabled={!hasRecording} onClick={onPost}>
