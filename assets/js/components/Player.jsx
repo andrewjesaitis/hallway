@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
+import Gravatar from 'react-gravatar';
 import { Modal, Button } from 'react-bootstrap';
 
-function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, handleReply, handleDelete, src, canDelete, subject }) {
+function Player({ show, handleClose, handleEnded, handleError, handlePrevious, handleNext, handleReply, handleDelete, src, canDelete, subject, email, name }) {
   return (
     <Modal show={show}>
       <Modal.Header>
@@ -37,6 +38,18 @@ function Player({ show, handleClose, handleEnded, handleError, handlePrevious, h
             <a onClick={handleNext}>
               <i className="material-icons md-48">keyboard_arrow_right</i>
             </a>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-sm-4 col-sm-offset-8 posted-by">
+            <div className="row">
+              <div className="col-sm-4">
+                <Gravatar email={email} className="img-circle box-shadow" />
+              </div>
+              <div className="col-sm-8">
+                <div><em>Posted by:</em></div><div>{name}</div>
+              </div>
+            </div>
           </div>
         </div>
       </Modal.Body>

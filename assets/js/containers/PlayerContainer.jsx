@@ -16,6 +16,8 @@ class PlayerContainer extends Component {
       canDelete: false,
       width: 480,
       height: 360,
+      name: '',
+      email: '',
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -26,6 +28,10 @@ class PlayerContainer extends Component {
       canDelete: length > 0
                  ? nextProps.messages.getIn([this.state.curIdx, 'can_delete'])
                  : false,
+      name: length > 0 ? nextProps.messages.getIn([this.state.curIdx, 'full_name']) : '',
+      email: length > 0
+                 ? nextProps.messages.getIn([this.state.curIdx, 'user'])
+                 : '',
     });
   }
   playNext() {
@@ -35,6 +41,8 @@ class PlayerContainer extends Component {
         src: this.props.messages.getIn([nextVideo, 'url']),
         canDelete: this.props.messages.getIn([nextVideo, 'can_delete']),
         curIdx: nextVideo,
+        name: this.props.messages.getIn([nextVideo, 'full_name']),
+        email: this.props.messages.getIn([nextVideo, 'user']),
       });
     }
   }
@@ -45,6 +53,8 @@ class PlayerContainer extends Component {
         src: this.props.messages.getIn([previousVideo, 'url']),
         canDelete: this.props.messages.getIn([previousVideo, 'can_delete']),
         curIdx: previousVideo,
+        name: this.props.messages.getIn([previousVideo, 'full_name']),
+        email: this.props.messages.getIn([previousVideo, 'user']),
       });
     }
   }
@@ -70,6 +80,8 @@ class PlayerContainer extends Component {
     this.setState({
       curIdx: 0,
       src: '',
+      name: '',
+      email: '',
     });
     this.props.clearConversation();
     this.props.displayPlayer(false);
@@ -104,6 +116,8 @@ class PlayerContainer extends Component {
         canDelete={this.state.canDelete}
         src={this.state.src}
         subject={this.props.subject}
+        name={this.state.name}
+        email={this.state.email}
       />
     );
   }

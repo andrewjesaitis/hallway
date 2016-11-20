@@ -26,16 +26,19 @@ class MessageSerializer(serializers.ModelSerializer):
     conversation = serializers.PrimaryKeyRelatedField(
         queryset=Conversation.objects.all(), allow_null=True, required=False)
     date_created = UnixEpochDateField(read_only=True)
-
     can_delete = serializers.SerializerMethodField('_created_by_current_user')
+    full_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
-        fields = ('pk', 'user', 'date_created', 'url', 'conversation', 'can_delete')
+        fields = ('pk', 'user', 'date_created', 'url', 'conversation',
+                  'can_delete', 'full_name')
 
     def _created_by_current_user(self, obj):
-        print(self.context)
         return self.context['request'].user == obj.user
+
+    def get_full_name(self, obj):
+        return "{} {}".format(obj.user.first_name, obj.user.last_name)
 
 class ConversationSerializer(serializers.ModelSerializer):
     pk = serializers.IntegerField(read_only=True)
