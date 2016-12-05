@@ -24,6 +24,7 @@ class RecorderContainer extends Component {
       width: 640,
       height: 360,
       isReply: Number.isInteger(this.props.conversationId),
+      cameraEnabled: true,
     };
   }
   componentWillReceiveProps(newProps) {
@@ -63,7 +64,11 @@ class RecorderContainer extends Component {
                  }),
                });
              })
-             .catch((err) => console.warn(JSON.stringify(err)));
+             .catch((err) => {
+               this.setState({
+                 cameraEnabled: false,
+               });
+             });
   }
   handleRecord() {
     if (this.state.isRecording) {
@@ -108,7 +113,12 @@ class RecorderContainer extends Component {
     this.handleClose();
   }
   handleClose() {
-    this.state.stream.getTracks().map(stream => stream.stop());
+    if (this.state.isRecording) {
+      this.stopRecording();
+    }
+    if (this.state.stream !== null) {
+      this.state.stream.getTracks().map(stream => stream.stop());
+    }
     this.setState({
       src: '',
       subject: '',
@@ -140,6 +150,7 @@ class RecorderContainer extends Component {
         onSubjectChange={(e) => this.handleSubjectChange(e)}
         subject={this.state.subject}
         isReply={this.state.isReply}
+        cameraEnabled={this.state.cameraEnabled}
       />
     );
   }

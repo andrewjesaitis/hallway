@@ -4,7 +4,7 @@ import { Modal, Button, FormGroup, FormControl, HelpBlock } from 'react-bootstra
 function Recorder({ showModal, isRecording, hasRecording, onRecord,
                     src, onClose, onPost, autoPlay, muted,
                     controls, loop, width, height, isSubjectValid,
-                    onSubjectChange, subject, isReply }) {
+                    onSubjectChange, subject, isReply, cameraEnabled }) {
   return (
     <Modal show={showModal}>
       <Modal.Header>
@@ -25,17 +25,20 @@ function Recorder({ showModal, isRecording, hasRecording, onRecord,
       <Modal.Body>
         <div className="row">
           <div className="col-sm-12 text-center embed-responsive embed-responsive-16by9">
-            <video
-              key={src}
-              className="embed-responsive-item"
-              autoPlay={autoPlay}
-              muted={muted}
-              controls={controls}
-              loop={loop}
-              width={width}
-              height={height}
-              src={src}
-            />
+            {cameraEnabled
+             ? <video
+                key={src}
+                className="embed-responsive-item"
+                autoPlay={autoPlay}
+                muted={muted}
+                controls={controls}
+                loop={loop}
+                width={width}
+                height={height}
+                src={src}
+               />
+             : <div className="no-camera-message bg-warning"><h4>Your webcam isn't enabled.</h4><p>Please grant access, so we can hear what you have to say! Once you change the browser setting, you'll probably need to reload the page.</p></div>
+           }
           </div>
         </div>
         {!isReply &&
@@ -58,7 +61,7 @@ function Recorder({ showModal, isRecording, hasRecording, onRecord,
         <Button className="btn-primary" disabled={!hasRecording} onClick={onPost}>
           Post
         </Button>
-        <Button className="btn-danger" active={isRecording} onClick={onRecord}>
+        <Button className="btn-danger" disabled={!cameraEnabled} active={isRecording} onClick={onRecord}>
           {isRecording ? 'Stop' : 'Record'}
         </Button>
       </Modal.Footer>
