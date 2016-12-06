@@ -181,3 +181,6 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+
+# S3 Bucket
+S3_BUCKET = 'cs6460'
